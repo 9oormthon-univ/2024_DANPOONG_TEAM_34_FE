@@ -1,0 +1,16 @@
+flutter_native_splash:
+  # iOS 전용 설정
+  color_ios: "#0C1C56"  # 배경색을 흰색으로 설정
+  image_ios: "assets/images/splash_screen.png"  # 스플래시 이미지 설정
+
+  # 다른 플랫폼 비활성화
+  android: false
+  web: false
+
+  # iOS 콘텐츠 모드 설정 (이미지 위치 및 크기 조절)
+  ios_content_mode: center
+
+  # Info.plist 파일 지정 (필요한 경우)
+#  info_plist_files:
+#    - 'ios/Runner/Info-Debug.plist'
+#    - 'ios/Runner/Info-Release.plist'
