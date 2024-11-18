@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "357591239740",
+    "project_id": "reboot-office",
+    "storage_bucket": "reboot-office.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357591239740:android:6476498236d2cb13998739",
+        "android_client_info": {
+          "package_name": "com.kyujin.rebootOffice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQH13voPY-JoB5uC_h_Cfg1Uu3xE9CMPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
