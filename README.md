@@ -45,9 +45,9 @@
 
 
 ## 👥 Member
-| [이재형](https://github.com/jaehyung-99) | [홍규진](https://github.com/Kyujenius) | [강지희](https://github.com/jhk3261) | [박민기](https://github.com/park20011029) | [정연재](https://github.com/zzangjyj0818) | 이희균 |
+| [이재형](https://github.com/jaehyung-99) | [홍규진](https://github.com/Kyujenius) | [강지희](https://github.com/jhk3261) | [박민기](https://github.com/park20011029) | [정연재](https://github.com/zzangjyj0818) | [이희균](https://github.com/nuykeeh) |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| 사진 | 사진 | 사진 | 사진 | 사진 | 사진 |
+|  | <img src="https://github.com/user-attachments/assets/4a161458-24cc-47ec-b34f-69798409aab6" width="160"/> | <img src="https://github.com/user-attachments/assets/d95db638-eabc-4c7b-957e-7208d3193324" width="160"/> | 사진 | 사진 | <img src="https://github.com/user-attachments/assets/4a56793e-2bc5-49f2-b941-358e3044e0df" width="160"/> |
 | Project Manager | Frontend Developer | Frontend Developer | Backend Developer | Backend Developer | Designer |
 
 <br>
