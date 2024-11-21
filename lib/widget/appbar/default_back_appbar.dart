@@ -9,11 +9,15 @@ class DefaultBackAppBar extends StatelessWidget {
     required this.title,
     this.actions = const <CustomIconButton>[],
     this.onBackPress,
+    this.showBackButton = true, // 기본값을 true로 설정
+    this.centerTitle = false,
   });
 
   final String title;
   final List<CustomIconButton> actions;
   final Function()? onBackPress;
+  final bool showBackButton;
+  final bool centerTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +25,9 @@ class DefaultBackAppBar extends StatelessWidget {
       title: Padding(
         padding: const EdgeInsets.only(right: 16),
         child: Text(title,
-            style: FontSystem.KR24B.copyWith(color: const Color(0xFF5356FF))),
+            style: FontSystem.KR16M.copyWith(color: const Color(0xFF000000))),
       ),
-      centerTitle: false,
+      centerTitle: centerTitle,
       surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,
       automaticallyImplyLeading: true,
@@ -38,11 +42,9 @@ class DefaultBackAppBar extends StatelessWidget {
           ),
         ),
         icon: SvgPicture.asset(
-          "assets/icons/arrow_back_blue.svg",
+          "assets/icons/appbar/arrow_back_black.svg",
           width: 24,
           height: 24,
-          colorFilter:
-              const ColorFilter.mode(Color(0xFF5356FF), BlendMode.srcIn),
         ),
         onPressed: onBackPress,
       ),

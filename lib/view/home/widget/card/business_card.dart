@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 
@@ -22,7 +23,7 @@ class BusinessCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 350,
+      width: Get.width * 0.9,
       height: 200,
       margin: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(

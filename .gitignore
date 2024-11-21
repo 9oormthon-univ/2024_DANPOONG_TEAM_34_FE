@@ -5,6 +5,7 @@
 # Flutter/Dart/Pub related
 **/doc/api/
 .dart_tool/
+ios/GoogleService-info.plist
 .flutter-plugins
 .flutter-plugins-dependencies
 .fvm/flutter_sdk
@@ -18,7 +19,6 @@ lib/generated_plugin_registrant.dart
 # Regenerating the pubspec.lock file lets you test your package against the latest compatible versions of its dependencies.
 # See https://dart.dev/guides/libraries/private-files#pubspeclock
 #pubspec.lock
-
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
@@ -66,3 +66,4 @@ lib/generated_plugin_registrant.dart
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 # End of https://www.toptal.com/developers/gitignore/api/flutter
+/.dart_tool/
