@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
-import 'package:rebootOffice/view/home/widget/card/business_card.dart';
 import 'package:rebootOffice/view_model/see_more/see_more_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
+import 'package:rebootOffice/widget/card/business_card.dart';
 import 'package:rebootOffice/widget/modal/custom_two_button_modal.dart';
 
 class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
