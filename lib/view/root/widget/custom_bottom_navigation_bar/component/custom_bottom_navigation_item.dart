@@ -15,22 +15,37 @@ class CustomBottomNavigationItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.only(bottom: 2),
-          height: 4,
-          width: isActive ? 20 : 0,
-          decoration: const BoxDecoration(
-            color: Color(0xFF0C1C56),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-          ),
-        ),
-        const SizedBox(height: 8),
-        SvgPicture.asset(
-          assetPath,
-          height: 50,
-        ),
+        const SizedBox(height: 4),
+        _buildAnimationView(),
+        const SizedBox(height: 2),
+        _buildImageView(),
       ],
+    );
+  }
+
+  Widget _buildAnimationView() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(bottom: 2),
+      height: 4,
+      width: isActive ? 20 : 0,
+      decoration: const BoxDecoration(
+        color: Color(0xFF111111),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+    );
+  }
+
+  Widget _buildImageView() {
+    return SvgPicture.asset(
+      assetPath,
+      colorFilter: isActive
+          ? const ColorFilter.mode(
+              Color(0xFF111111),
+              BlendMode.srcIn,
+            )
+          : null,
+      height: 28,
     );
   }
 }

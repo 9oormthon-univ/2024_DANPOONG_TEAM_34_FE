@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/utility/system/color_system.dart';
+import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_widget.dart';
 
 import '../../../../view_model/root/root_view_model.dart';
@@ -10,65 +12,70 @@ class CustomBottomNavigationBar extends BaseWidget<RootViewModel> {
 
   @override
   Widget buildView(BuildContext context) {
-    return Container(
-      height: 88,
-      margin: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: GetPlatform.isAndroid ? 20 : 32,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: Row(
-        children: _buildItemViews(),
-      ),
-    );
-  }
+    return Obx(
+      () => Theme(
+        data: ThemeData(
+          highlightColor: Colors.transparent,
+          splashFactory: NoSplash.splashFactory,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: ColorSystem.grey.withOpacity(0.3),
+                offset: const Offset(0, -2),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
+            // State Management
+            currentIndex: viewModel.selectedIndex,
+            onTap: viewModel.fetchIndex,
 
-  List<Widget> _buildItemViews() {
-    List<String> inActiveAssetPath = [
-      "assets/icons/bottom_navigation/home-icon.svg",
-      "assets/icons/bottom_navigation/chatting-icon.svg",
-      "assets/icons/bottom_navigation/statistics-icon.svg",
-      "assets/icons/bottom_navigation/etc-icon.svg",
-    ];
+            // Design
+            backgroundColor: ColorSystem.white,
+            type: BottomNavigationBarType.fixed,
 
-    List<String> activeAssetPath = [
-      "assets/icons/bottom_navigation/home-active-icon.svg",
-      "assets/icons/bottom_navigation/chatting-active-icon.svg",
-      "assets/icons/bottom_navigation/statistics-active-icon.svg",
-      "assets/icons/bottom_navigation/etc-active-icon.svg",
-    ];
+            // When not selected
+            unselectedItemColor: const Color(0xFF767676),
+            unselectedLabelStyle: FontSystem.KR12R,
 
-    return List.generate(
-      4,
-      (index) => Expanded(
-        child: GestureDetector(
-          onTap: () => {
-            viewModel.fetchIndex(index),
-          },
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Obx(
-                  () {
-                    bool isActive = viewModel.selectedIndex == index;
-                    String assetPath = isActive
-                        ? activeAssetPath[index]
-                        : inActiveAssetPath[index];
-                    return CustomBottomNavigationItem(
-                      isActive: isActive,
-                      assetPath: assetPath,
-                    );
-                  },
+            // When selected
+            selectedItemColor: const Color(0xFF111111),
+            selectedLabelStyle: FontSystem.KR12R,
+
+            // Items
+            items: [
+              BottomNavigationBarItem(
+                icon: CustomBottomNavigationItem(
+                  isActive: viewModel.selectedIndex == 0,
+                  assetPath: "assets/icons/bottom_navigation/home.svg",
                 ),
-              ],
-            ),
+                label: "홈",
+              ),
+              BottomNavigationBarItem(
+                icon: CustomBottomNavigationItem(
+                  isActive: viewModel.selectedIndex == 1,
+                  assetPath: "assets/icons/bottom_navigation/chatting.svg",
+                ),
+                label: "채팅",
+              ),
+              BottomNavigationBarItem(
+                icon: CustomBottomNavigationItem(
+                  isActive: viewModel.selectedIndex == 2,
+                  assetPath: "assets/icons/bottom_navigation/statistic.svg",
+                ),
+                label: "통계",
+              ),
+              BottomNavigationBarItem(
+                icon: CustomBottomNavigationItem(
+                  isActive: viewModel.selectedIndex == 3,
+                  assetPath: "assets/icons/bottom_navigation/see_more.svg",
+                ),
+                label: "더보기",
+              ),
+            ],
           ),
         ),
       ),
