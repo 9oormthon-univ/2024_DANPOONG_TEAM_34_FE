@@ -8,12 +8,15 @@ class DefaultSvgAppBar extends StatelessWidget {
     required this.svgPath,
     required this.height,
     this.actions = const <CustomIconButton>[],
+    this.onBackPress,
+    this.showBackButton = true, // 기본값을 true로 설정
   });
 
   final String svgPath;
   final double height;
   final List<CustomIconButton> actions;
-
+  final Function()? onBackPress;
+  final bool showBackButton;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -26,6 +29,23 @@ class DefaultSvgAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       centerTitle: true,
       actions: actions,
+      leading: showBackButton
+          ? IconButton(
+              style: TextButton.styleFrom(
+                splashFactory: NoSplash.splashFactory,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+              ),
+              icon: SvgPicture.asset(
+                "assets/icons/appbar/arrow_back_black.svg",
+                width: 24,
+                height: 24,
+              ),
+              onPressed: onBackPress,
+            )
+          : null,
     );
   }
 }
