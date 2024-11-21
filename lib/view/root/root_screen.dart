@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
-import 'package:rebootOffice/view/chatting/chatting_list_screen.dart';
+import 'package:rebootOffice/view/chatting_list/chatting_list_screen.dart';
 import 'package:rebootOffice/view/home/home_screen.dart';
 import 'package:rebootOffice/view/root/widget/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:rebootOffice/view/see_more/see_more_screen.dart';
