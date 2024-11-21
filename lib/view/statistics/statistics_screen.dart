@@ -6,6 +6,8 @@ import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
 import 'package:rebootOffice/widget/card/status_card.dart';
 
+import 'widget/attendance_card.dart';
+
 class StatisticsScreen extends BaseScreen<StatisticsViewModel> {
   const StatisticsScreen({super.key});
   @override
@@ -37,7 +39,7 @@ class StatisticsScreen extends BaseScreen<StatisticsViewModel> {
             _buildTitle(),
             StatusCard(),
             const SizedBox(height: 24),
-            _buildAttendanceList(),
+            AttendanceCard(),
           ],
         ),
       ),
