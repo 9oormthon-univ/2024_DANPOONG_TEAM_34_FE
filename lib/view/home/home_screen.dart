@@ -8,8 +8,9 @@ import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view_model/home/home_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
 import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
-
-import 'widget/card/business_card.dart';
+import 'package:rebootOffice/widget/card/business_card.dart';
+import 'package:rebootOffice/widget/card/status_card.dart';
+import 'package:rebootOffice/widget/card/work_alert_card.dart';
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -47,6 +48,8 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
               email: 'hkj0206@dgu.ac.kr',
               phone: '010-5820-4625',
             ),
+            StatusCard(),
+            WelcomeCard(),
             _buildSchedule(),
             _buildCalendarSection(),
           ],
