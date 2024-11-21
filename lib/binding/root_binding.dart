@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:rebootOffice/view_model/chatting_list/chatting_list_view_model.dart';
 import 'package:rebootOffice/view_model/chatting_room/chatting_room_view_model.dart';
+import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
 import 'package:rebootOffice/view_model/see_more/see_more_view_model.dart';
 import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 
