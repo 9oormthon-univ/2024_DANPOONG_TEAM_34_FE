@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
-import 'package:rebootOffice/view_model/chatting_list/chatting_list_view_model.dart';
+import 'package:rebootOffice/view_model/chatting_list/chatting_room_list_view_model.dart';
 import 'package:rebootOffice/view_model/chatting_room/chatting_room_view_model.dart';
+import 'package:rebootOffice/view_model/login/login_view_model.dart';
 import 'package:rebootOffice/view_model/see_more/see_more_view_model.dart';
 import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 
@@ -17,6 +18,7 @@ class RootBinding extends Bindings {
     StatisticsBinding().dependencies();
     ChattingRoomBinding().dependencies();
     SeeMoreBinding().dependencies();
+    LoginBinding().dependencies();
   }
 }
 
@@ -30,7 +32,7 @@ class HomeBinding extends Bindings {
 class ChattingListBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ChattingListViewModel>(() => ChattingListViewModel());
+    Get.lazyPut<ChattingRoomListViewModel>(() => ChattingRoomListViewModel());
   }
 }
 
@@ -57,5 +59,12 @@ class SeeMoreBinding extends Bindings {
     Get.lazyPut<SeeMoreViewModel>(
       () => SeeMoreViewModel(),
     );
+  }
+}
+
+class LoginBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LoginViewModel>(() => LoginViewModel());
   }
 }
