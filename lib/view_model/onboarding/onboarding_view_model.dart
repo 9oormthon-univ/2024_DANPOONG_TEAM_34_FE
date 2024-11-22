@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flip_card/flutter_flip_card.dart';
 import 'package:get/get.dart';
 
 class OnboardingViewModel extends GetxController {
@@ -11,6 +12,8 @@ class OnboardingViewModel extends GetxController {
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
   late final PageController _pageController;
+
+  late final FlipCardController _flipCardController;
   // 사용자의 이름
   final RxString _name = ''.obs;
   // 현재 입력된 이름이 유효한지 상태 관리
@@ -36,6 +39,7 @@ class OnboardingViewModel extends GetxController {
   // /* ----------------- Public Fields ---------------------- */
   // /* ------------------------------------------------------ */
   PageController get pageController => _pageController;
+  FlipCardController get flipCardController => _flipCardController;
 
   String get name => _name.value;
   bool get isNameValid => _isNameValid.value;
@@ -56,6 +60,9 @@ class OnboardingViewModel extends GetxController {
 
     // 페이지 컨트롤러 초기화
     _pageController = PageController(viewportFraction: 1);
+
+    // flipcard 컨트롤러 초기화
+    _flipCardController = FlipCardController();
   }
 
   @override
