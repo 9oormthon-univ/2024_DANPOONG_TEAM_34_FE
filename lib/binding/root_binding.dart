@@ -21,6 +21,7 @@ class RootBinding extends Bindings {
     SeeMoreBinding().dependencies();
     OnboardingBinding().dependencies();
     LoginBinding().dependencies();
+    StatisticsBinding().dependencies();
   }
 }
 
@@ -70,9 +71,19 @@ class OnboardingBinding extends Bindings {
     Get.lazyPut<OnboardingViewModel>(
       () => OnboardingViewModel(),
     );
+  }
+}
+
 class LoginBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<LoginViewModel>(() => LoginViewModel());
+  }
+}
+
+class StatissticDetailBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<StatisticsViewModel>(() => StatisticsViewModel());
   }
 }
