@@ -1,13 +1,33 @@
-// 메시지 관련 클래스와 컨트롤러
+import 'package:intl/intl.dart';
 
-class ChatMessage {
-  final String sender;
-  final String content;
-  final String time;
+class ChatState {
+  final String chatContent;
+  final String? imageUrl; // nullable로 변경
+  final DateTime createAt;
+  final String speaker;
 
-  ChatMessage({
-    required this.sender,
-    required this.content,
-    required this.time,
+  ChatState({
+    required this.chatContent,
+    this.imageUrl, // required 제거
+    required this.createAt,
+    required this.speaker,
   });
+
+  factory ChatState.fromJson(Map<String, dynamic> json) {
+    DateTime parseDateTime(String dateStr) {
+      try {
+        return DateTime.parse(dateStr);
+      } catch (e) {
+        final DateFormat formatter = DateFormat('yyyy-MM-dd\'T\'HH:mm:ss');
+        return formatter.parse(dateStr.replaceAll(RegExp(r'::\d+'), ':00'));
+      }
+    }
+
+    return ChatState(
+      chatContent: json['chatContent'],
+      imageUrl: json['imageUrl'], // null이 허용됨
+      createAt: parseDateTime(json['createAt']),
+      speaker: json['speaker'],
+    );
+  }
 }

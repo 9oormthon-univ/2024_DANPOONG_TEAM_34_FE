@@ -26,15 +26,15 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
-
+/ios/GoogleService-Info.plist
 .flutter-plugins
 .flutter-plugins-dependencies
-
 ### Dart Patch ###
 # dotenv environment variables file
 .env
-
+.idea/libraries/
 ### Flutter ###
+
 # Flutter/Dart/Pub related
 **/doc/api/
 .fvm/flutter_sdk

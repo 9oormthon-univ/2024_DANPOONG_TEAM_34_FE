@@ -8,14 +8,10 @@ abstract class BaseConnect extends GetConnect {
   final TokenProvider tokenProvider = SecureStorageFactory.tokenProvider;
 
   @override
-  String get defaultContentType => 'application/json';
-
-  @override
   void onInit() {
     super.onInit();
     httpClient
       ..baseUrl = dotenv.env['SERVER_HOST']
-      ..defaultContentType = defaultContentType
       ..timeout = const Duration(seconds: 30)
       ..addRequestModifier<dynamic>((request) {
         if (tokenProvider.accessToken != null) {

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
-import 'package:rebootOffice/view/home/widget/card/business_card.dart';
 import 'package:rebootOffice/view_model/see_more/see_more_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
+import 'package:rebootOffice/widget/card/business_card.dart';
 import 'package:rebootOffice/widget/modal/custom_two_button_modal.dart';
+
+import '../../repository/auth/auth_repository.dart';
 
 class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
   const SeeMoreScreen({super.key});
@@ -49,6 +52,8 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
   }
 
   Widget _buildMenuButtons(BuildContext context) {
+    final authRepository = Get.find<AuthRepository>();
+
     return Column(children: [
       _buildMenuButton(
         title: '서비스 이용 약관',
@@ -75,18 +80,7 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
         },
       ),
       _buildMenuButton(
-          title: '로그아웃',
-          onTap: () => showDialog(
-                context: context,
-                barrierColor: Colors.black.withOpacity(0.5),
-                builder: (context) => CustomTwoButtonModal(
-                  title: "Your Title",
-                  leftButtonText: "Cancel",
-                  rightButtonText: "Confirm",
-                  onLeftButtonTap: () {},
-                  onRightButtonTap: () {},
-                ),
-              )),
+          title: '로그아웃', onTap: () => authRepository.clearTokens()),
       _buildMenuButton(
           title: '다시 시작하기',
           onTap: () => showDialog(

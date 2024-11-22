@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
-import 'package:rebootOffice/view/chatting_list/chatting_list_screen.dart';
+import 'package:rebootOffice/view/chatting_list/chatting_room_list_screen.dart';
 import 'package:rebootOffice/view/home/home_screen.dart';
 import 'package:rebootOffice/view/onboarding/onboarding_result_screen.dart';
 import 'package:rebootOffice/view/onboarding/onboarding_screen.dart';
@@ -28,12 +28,15 @@ class RootScreen extends BaseScreen<RootViewModel> {
       () => IndexedStack(
         index: viewModel.selectedIndex,
         children: const [
-          HomeScreen(),
+//           HomeScreen(),
           // ChattingListScreen(),
           // StatisticsScreen(),
           // SeeMoreScreen(),
-          // OnboardingScreen(),
+          OnboardingScreen(),
           OnboardingResultScreen(),
+          ChattingRoomListScreen(),
+          StatisticsScreen(),
+//           SeeMoreScreen(),
         ],
       ),
     );

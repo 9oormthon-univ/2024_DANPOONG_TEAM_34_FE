@@ -1,44 +1,37 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/model/chatting/chatting_room_state.dart';
+import 'package:rebootOffice/repository/chatting/chatting_repository.dart';
 
-class ChattingListViewModel extends GetxController {
+class ChattingRoomListViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* -------------------- DI Fields ----------------------- */
   /* ------------------------------------------------------ */
-
+  late final ChattingRepository _chattingRepository;
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
-  late final PageController _pageController;
-
-  late final RxBool _isLoadingWhenOpenDialog;
-
+  late final RxList<ChattingRoomState> _chattingRoomList =
+      <ChattingRoomState>[].obs;
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
   /* ------------------------------------------------------ */
-  PageController get pageController => _pageController;
-
-  bool get isLoadingWhenOpenDialog => _isLoadingWhenOpenDialog.value;
+  List<ChattingRoomState> get chattingRoomList => _chattingRoomList;
 
   @override
   void onInit() {
     super.onInit();
     // Dependency Injection
-
+    _chattingRepository = Get.find<ChattingRepository>();
     // Initialize private fields
-    _pageController = PageController(viewportFraction: 0.83);
-
-    _isLoadingWhenOpenDialog = false.obs;
   }
 
   @override
   void onReady() async {
     super.onReady();
+    fetchChattingRoomList();
   }
 
-  void fetchQuizDetail(int index) async {
-    _isLoadingWhenOpenDialog.value = true;
-
-    _isLoadingWhenOpenDialog.value = false;
+  void fetchChattingRoomList() async {
+    _chattingRoomList.value = await _chattingRepository.readChattingRoomList();
   }
 }

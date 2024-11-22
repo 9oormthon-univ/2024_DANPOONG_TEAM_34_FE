@@ -1,34 +1,32 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/model/home/daily_work_state.dart';
+import 'package:rebootOffice/model/home/week_state.dart';
+import 'package:rebootOffice/repository/home/home_repository.dart';
 
 class HomeViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* -------------------- DI Fields ----------------------- */
   /* ------------------------------------------------------ */
-
+  late final _homeRepository;
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
-  late final PageController _pageController;
-
-  late final RxBool _isLoadingWhenOpenDialog;
-
+  late final Rx<WeekState> _weekState = WeekState.initial().obs;
+  late final RxList<DailyWorkState> _dailyWorkState = <DailyWorkState>[].obs;
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
   /* ------------------------------------------------------ */
-  PageController get pageController => _pageController;
 
-  bool get isLoadingWhenOpenDialog => _isLoadingWhenOpenDialog.value;
-
+  WeekState get weekState => _weekState.value;
+  List<DailyWorkState> get dailyWorkState => _dailyWorkState;
   @override
   void onInit() {
     super.onInit();
     // Dependency Injection
-
+    _homeRepository = Get.find<HomeRepository>();
     // Initialize private fields
-    _pageController = PageController(viewportFraction: 0.83);
-
-    _isLoadingWhenOpenDialog = false.obs;
+    readWeek();
+    readDailyWork();
   }
 
   @override
@@ -36,9 +34,11 @@ class HomeViewModel extends GetxController {
     super.onReady();
   }
 
-  void fetchQuizDetail(int index) async {
-    _isLoadingWhenOpenDialog.value = true;
+  void readWeek() async {
+    _weekState.value = await _homeRepository.readUserWeek();
+  }
 
-    _isLoadingWhenOpenDialog.value = false;
+  void readDailyWork() async {
+    _dailyWorkState.value = await _homeRepository.readUserDailyWork();
   }
 }

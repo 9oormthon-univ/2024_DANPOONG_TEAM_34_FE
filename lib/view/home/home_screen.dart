@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
+import 'package:rebootOffice/view/home/widget/week_calendar_card.dart';
+import 'package:rebootOffice/view/home/widget/week_selector_dialog.dart';
 import 'package:rebootOffice/view_model/home/home_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
-import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
-
-import 'widget/card/business_card.dart';
+import 'package:rebootOffice/widget/card/business_card.dart';
+import 'package:rebootOffice/widget/card/status_card.dart';
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -33,23 +33,28 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTitle(),
-            const BusinessCard(
-              name: '홍규진',
-              nameEn: 'Hong Kyujin',
-              department: '개발',
-              email: 'hkj0206@dgu.ac.kr',
-              phone: '010-5820-4625',
-            ),
-            _buildSchedule(),
-            _buildCalendarSection(),
-          ],
+    return Obx(
+      () => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitle(),
+              const BusinessCard(
+                name: '홍규진',
+                nameEn: 'Hong Kyujin',
+                department: '개발',
+                email: 'hkj0206@dgu.ac.kr',
+                phone: '010-5820-4625',
+              ),
+              StatusCard(),
+              //TODO-[규진] 상황에 따라 있게끔 하는 걸 구현해야함.
+              // WelcomeCard(),
+              _buildSchedule(),
+              _buildCalendarSection(context),
+            ],
+          ),
         ),
       ),
     );
@@ -82,14 +87,20 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                _buildScheduleItem('08:00', '출근', true, true),
-                _buildScheduleItem('09:00', '아침식사', true, false),
-                _buildScheduleItem('12:00', '점심식사', true, false),
-                _buildScheduleItem('15:00', '산책', false, false),
-                _buildScheduleItem('23:00', '저녁식사', false, false),
-              ],
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: viewModel.dailyWorkState.length,
+              itemBuilder: (context, index) {
+                final work = viewModel.dailyWorkState[index];
+                return _buildScheduleItem(
+                  startTime: work.startTime, // DateTime 객체 직접 전달
+                  endTime: work.endTime, // DateTime 객체 직접 전달
+                  activity: enumToKorean(work.mission),
+                  isDone: work.status == 'SUCCESS',
+                  isFirst: index == 0,
+                );
+              },
             ),
           ),
         ),
@@ -97,44 +108,42 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     );
   }
 
-  Widget _buildScheduleItem(
-    String time,
-    String activity,
-    bool isDone,
-    bool isFirst,
-  ) {
-    // 현재 시간과 비교하기 위해 time 문자열을 DateTime으로 변환
+  String enumToKorean(String value) {
+    switch (value) {
+      case 'FOLD':
+        return '기상';
+      case 'MORNING':
+        return '아침식사';
+      case 'LUNCH':
+        return '점심식사';
+      case 'DINNER':
+        return '저녁식사';
+      case 'LEAVE':
+        return '취침';
+      default:
+        return value;
+    }
+  }
+
+  Widget _buildScheduleItem({
+    required String startTime,
+    required String endTime,
+    required String activity,
+    required bool isDone,
+    required bool isFirst,
+  }) {
     final now = DateTime.now();
-    final timeComponents = time.split(':');
-    final endTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      int.parse(timeComponents[0]) + 1,
-      int.parse(timeComponents[1]),
-    );
-    final endTimeString = DateFormat('HH:mm').format(endTime);
-
-    final scheduleTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      int.parse(timeComponents[0]),
-      int.parse(timeComponents[1]),
-    );
-
-    // 부모 위젯에서 rebuild될 때마다 현재 시간 체크
-    final isCurrentTime = now.isAfter(scheduleTime) &&
-        now.isBefore(scheduleTime.add(const Duration(hours: 1)));
+    // final isCurrentTime = now.isAfter(startTime) &&
+    //     now.isBefore(startTime.add(const Duration(hours: 1)));
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDone
             ? ColorSystem.grey.shade200
-            : isCurrentTime
-                ? const Color(0xFF0066FF).withOpacity(0.1)
-                : ColorSystem.white,
+            // : isCurrentTime
+            //     ? const Color(0xFF0066FF).withOpacity(0.1)
+            : ColorSystem.white,
         borderRadius: isFirst
             ? const BorderRadius.only(
                 topLeft: Radius.circular(16), topRight: Radius.circular(16))
@@ -149,13 +158,13 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
       child: Row(
         children: [
           Text(
-            time,
+            startTime,
             style: FontSystem.KR18M.copyWith(
               color: ColorSystem.black,
             ),
           ),
           Text(
-            (' ~ $endTimeString'),
+            ' ~ $endTime',
             style: FontSystem.KR18M.copyWith(
               color: ColorSystem.black,
             ),
@@ -185,113 +194,25 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
   }
 
   //-----------------주간 캘린더 위젯 구현 -----------------//
-  Widget _buildCalendarSection() {
-    final now = DateTime.now();
-    final weekNumber = ((now.day - 1) ~/ 7) + 1;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: ColorSystem.grey.shade200, width: 1.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '${now.year}년 ${now.month}월 ${weekNumber}주차',
-                style: FontSystem.KR16B,
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.keyboard_arrow_down),
-                onPressed: () {},
-              ),
-            ],
+  Widget _buildCalendarSection(BuildContext context) {
+    return WeekCalendarCard(
+      weekState: viewModel.weekState,
+      onWeekSelect: () {
+        showDialog(
+          context: context,
+          builder: (context) => WeekSelectorDialog(
+            weekState: viewModel.weekState,
+            onWeekSelected: (selectedDate) {
+              // ViewModel에서 선택된 날짜 업데이트
+            },
           ),
-          const SizedBox(height: 16),
-          _buildWeekCalendar(),
-          const SizedBox(height: 16),
-          RoundedRectangleTextButton(
-            onPressed: () {},
-            width: Get.width,
-            backgroundColor: ColorSystem.blue.shade500,
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            text: '업무일지 보러가기',
-            textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeekCalendar() {
-    final now = DateTime.now();
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final days = List.generate(
-      7,
-      (index) {
-        final date = weekStart.add(Duration(days: index));
-        return {
-          'weekday': _getWeekdayString(date.weekday),
-          'date': date.day.toString(),
-          'isSelected': date.isBefore(now) ||
-              date.isAtSameMomentAs(DateTime(now.year, now.month, now.day)),
-        };
+        );
+      },
+      onReportTap: () {
+        // 업무일지 보기 로직
       },
     );
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: days
-          .map((day) => _buildDayItem(
-                day['weekday'] as String,
-                day['date'] as String,
-                day['isSelected'] as bool,
-              ))
-          .toList(),
-    );
   }
 
-  String _getWeekdayString(int weekday) {
-    switch (weekday) {
-      case DateTime.sunday:
-        return 'S';
-      case DateTime.monday:
-        return 'M';
-      case DateTime.tuesday:
-        return 'T';
-      case DateTime.wednesday:
-        return 'W';
-      case DateTime.thursday:
-        return 'T';
-      case DateTime.friday:
-        return 'F';
-      case DateTime.saturday:
-        return 'S';
-      default:
-        return '';
-    }
-  }
-
-  Widget _buildDayItem(String weekday, String date, bool isSelected) {
-    return Column(
-      children: [
-        Text(weekday, style: FontSystem.KR14R),
-        const SizedBox(height: 8),
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isSelected ? ColorSystem.blue.shade500 : Colors.transparent,
-          ),
-        ),
-        Text(date, style: FontSystem.KR14R),
-      ],
-    );
-  }
-//-----------------주간 캘린더 위젯 구현 끝 -----------------//
+  //-----------------주간 캘린더 위젯 구현 끝 -----------------//
 }
