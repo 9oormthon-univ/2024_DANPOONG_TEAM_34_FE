@@ -30,6 +30,9 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 
+ios/GoogleService-Info.plist
+
+
 ### Dart Patch ###
 # dotenv environment variables file
 .env
