@@ -7,6 +7,7 @@ import 'package:rebootOffice/view/register/register_screen.dart';
 import 'package:rebootOffice/view/root/widget/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:rebootOffice/view/see_more/see_more_screen.dart';
 import 'package:rebootOffice/view/statistics/statistics_screen.dart';
+import 'package:rebootOffice/view/statistics_detail/statistics_detail_screen.dart';
 import 'package:rebootOffice/view_model/root/root_view_model.dart';
 
 class RootScreen extends BaseScreen<RootViewModel> {
