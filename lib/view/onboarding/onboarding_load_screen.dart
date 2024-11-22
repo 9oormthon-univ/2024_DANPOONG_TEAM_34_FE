@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
@@ -20,108 +22,109 @@ class OnboardingLoadScreen extends BaseScreen<OnboardingViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
+    Future.delayed(Duration.zero, () => viewModel.startAnimation());
     return Stack(
       children: [
-        _buildAnimatedBackground(),
         _buildLoadingText(),
       ],
     );
   }
 
-  Widget _buildAnimatedBackground() {
-    // return AnimatedBuilder(
-    //   animation: viewModel.isTextChanged,
-    //   builder: (context, child) {
-    return CustomPaint(
-      painter: CirclePainter(),
-      child: Container(),
+  Widget _buildLoadingText() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48),
+      child: Obx(
+        () => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildStepText(viewModel.steps[0], Icons.circle,
+                viewModel.steps[0] == viewModel.updatedSteps[0]),
+            const SizedBox(
+              height: 36,
+            ),
+            _buildStepText(viewModel.steps[1], Icons.circle,
+                viewModel.steps[1] == viewModel.updatedSteps[1]),
+            const SizedBox(
+              height: 36,
+            ),
+            _buildStepText(viewModel.steps[2], Icons.circle,
+                viewModel.steps[2] == viewModel.updatedSteps[2]),
+          ],
+        ),
+      ),
     );
   }
-}
 
-Widget _buildLoadingText() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 48),
-    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      _buildFirstText(),
-      const SizedBox(
-        height: 36,
+  Widget _buildFirstText() {
+    return Row(children: [
+      Icon(
+        Icons.circle,
+        color: ColorSystem.grey.shade600,
+        size: 8,
       ),
-      _buildSecondText(),
       const SizedBox(
-        height: 36,
+        width: 8,
       ),
-      _buildThirdText(),
-    ]),
-  );
-}
-
-Widget _buildFirstText() {
-  return Row(children: [
-    Icon(
-      Icons.circle,
-      color: ColorSystem.grey.shade600,
-      size: 8,
-    ),
-    const SizedBox(
-      width: 8,
-    ),
-    Text(
-      "제출하신 이력서를 검토하고 있습니다…",
-      style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-    )
-  ]);
-}
-
-Widget _buildSecondText() {
-  return Row(children: [
-    Icon(
-      Icons.circle,
-      color: ColorSystem.grey.shade600,
-      size: 8,
-    ),
-    const SizedBox(
-      width: 8,
-    ),
-    Text(
-      "지원자의 역량을 분석하고 있습니다…",
-      style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-    )
-  ]);
-}
-
-Widget _buildThirdText() {
-  return Row(children: [
-    Icon(
-      Icons.circle,
-      color: ColorSystem.grey.shade600,
-      size: 8,
-    ),
-    const SizedBox(
-      width: 8,
-    ),
-    Text(
-      "최종 회의를 통해 결정 중입니다…",
-      style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-    )
-  ]);
-}
-
-class CirclePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = ColorSystem.white.withOpacity(.2)
-      ..style = PaintingStyle.fill;
-
-    double radius =
-        50.0 + 20 * (DateTime.now().second % 10); // 간단한 애니메이션을 위해 초에 따라 변화
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), radius, paint);
+      Text(
+        "제출하신 이력서를 검토하고 있습니다…",
+        style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
+      )
+    ]);
   }
 
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    throw UnimplementedError();
+  Widget _buildSecondText() {
+    return Row(children: [
+      Icon(
+        Icons.circle,
+        color: ColorSystem.grey.shade600,
+        size: 8,
+      ),
+      const SizedBox(
+        width: 8,
+      ),
+      Text(
+        "지원자의 역량을 분석하고 있습니다…",
+        style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
+      )
+    ]);
+  }
+
+  Widget _buildThirdText() {
+    return Row(children: [
+      Icon(
+        Icons.circle,
+        color: ColorSystem.grey.shade600,
+        size: 8,
+      ),
+      const SizedBox(
+        width: 8,
+      ),
+      Text(
+        "최종 회의를 통해 결정 중입니다…",
+        style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
+      )
+    ]);
+  }
+
+  Widget _buildStepText(String text, IconData icon, bool isActive) {
+    return Row(
+      children: [
+        isActive
+            ? SvgPicture.asset('assets/icons/common/check.svg')
+            : Icon(
+                icon,
+                color: ColorSystem.grey.shade600,
+                size: 8,
+              ),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 18,
+            color: isActive ? Colors.white : ColorSystem.grey.shade600,
+          ),
+        ),
+      ],
+    );
   }
 }

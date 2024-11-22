@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
 import 'package:get/get.dart';
+
+import '../../view/onboarding/onboarding_result_screen.dart';
 
 class OnboardingViewModel extends GetxController {
   /* ------------------------------------------------------ */
@@ -14,6 +18,7 @@ class OnboardingViewModel extends GetxController {
   late final PageController _pageController;
 
   late final FlipCardController _flipCardController;
+
   // 사용자의 이름
   final RxString _name = ''.obs;
   // 현재 입력된 이름이 유효한지 상태 관리
@@ -35,6 +40,21 @@ class OnboardingViewModel extends GetxController {
   // 현재 페이지 인덱스
   final RxInt _currentPageIndex = 0.obs;
 
+  // 로딩스크린
+  // 현재 텍스트 상태
+  final RxList<String> steps = [
+    "제출하신 이력서를 검토하고 있습니다...",
+    "지원자의 역량을 분석하고 있습니다...",
+    "최종 회의를 통해 결정 중입니다..."
+  ].obs;
+
+  // 변환 텍스트
+  final List<String> updatedSteps = [
+    "이력서 검토가 끝났습니다!",
+    "역량 분석이 끝났습니다!",
+    "회의를 통해 최종 승인되었어요!"
+  ];
+
   // /* ------------------------------------------------------ */
   // /* ----------------- Public Fields ---------------------- */
   // /* ------------------------------------------------------ */
@@ -52,6 +72,8 @@ class OnboardingViewModel extends GetxController {
   int get currentPageIndex => _currentPageIndex.value;
 
   set currentPageIndex(int value) => _currentPageIndex.value = value; // Setter
+
+  // 로딩스크린
 
   @override
   void onInit() {
@@ -91,6 +113,21 @@ class OnboardingViewModel extends GetxController {
 
   void selectGender(String gender) {
     _selectedGender.value = gender;
+  }
+
+  // 로딩스크린
+  void startAnimation() {
+    for (int i = 0; i < steps.length; i++) {
+      Future.delayed(Duration(seconds: 2 * (i + 1)), () {
+        steps[i] = updatedSteps[i]; // i번째 텍스트를 업데이트
+
+        if (i == steps.length - 1) {
+          Future.delayed(const Duration(seconds: 2), () {
+            Get.to(() => const OnboardingResultScreen());
+          });
+        }
+      });
+    }
   }
 
   void goToNextStep() {
