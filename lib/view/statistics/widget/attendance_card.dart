@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:rebootOffice/model/statistics/attendance_state.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
+import 'package:rebootOffice/view/base/base_widget.dart';
+import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 
-class AttendanceCard extends StatefulWidget {
-  const AttendanceCard({Key? key}) : super(key: key);
-
-  @override
-  State<AttendanceCard> createState() => _AttendanceCardState();
-}
-
-class _AttendanceCardState extends State<AttendanceCard> {
-  int selectedTab = 0; // 0: 출근/퇴근, 1: 식사업무, 2: 외근업무
+class AttendanceCard extends BaseWidget<StatisticsViewModel> {
+  const AttendanceCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildView(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: ColorSystem.white,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        children: [
-          _buildTopBar(),
-          _buildAttendanceStamps(),
-        ],
+      child: Obx(
+        () => Column(
+          children: [
+            _buildTopBar(),
+            _buildAttendanceStamps(),
+          ],
+        ),
       ),
     );
   }
@@ -42,11 +41,11 @@ class _AttendanceCardState extends State<AttendanceCard> {
   Widget _buildTab(String title, int index) {
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => selectedTab = index),
+        onTap: () => viewModel.setSelectedIndex(index),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: selectedTab == index
+            color: viewModel.selectedIndex == index
                 ? ColorSystem.blue.shade500
                 : ColorSystem.grey.shade200,
             borderRadius: const BorderRadius.only(
@@ -55,7 +54,7 @@ class _AttendanceCardState extends State<AttendanceCard> {
           child: Text(
             title,
             style: FontSystem.KR14B.copyWith(
-              color: selectedTab == index
+              color: viewModel.selectedIndex == index
                   ? ColorSystem.white
                   : ColorSystem.grey.shade600,
             ),
@@ -76,17 +75,19 @@ class _AttendanceCardState extends State<AttendanceCard> {
           bottomRight: Radius.circular(12),
         ),
       ),
-      child: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5,
-          mainAxisSpacing: 0,
-          crossAxisSpacing: 0,
+      child: Obx(
+        () => GridView.builder(
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            mainAxisSpacing: 0,
+            crossAxisSpacing: 0,
+          ),
+          itemCount: viewModel.getCurrentAttendanceState().length, // 예시로 15일
+          itemBuilder: (context, index) {
+            return _buildStamp(index);
+          },
         ),
-        itemCount: 21, // 예시로 15일
-        itemBuilder: (context, index) {
-          return _buildStamp(index);
-        },
       ),
     );
   }
@@ -94,7 +95,7 @@ class _AttendanceCardState extends State<AttendanceCard> {
   Widget _buildStamp(int index) {
     // 예시 데이터 - 실제로는 동적으로 계산되어야 함
     final date = DateTime.now().add(Duration(days: index));
-    final status = _getMockStampStatus(index); // 출석 상태 가져오기
+    final status = _getMockStatus(index); // 출석 상태 가져오기
 
     return Column(
       children: [
@@ -109,41 +110,39 @@ class _AttendanceCardState extends State<AttendanceCard> {
             ),
           ),
           child: Center(
-            child: _getStampIcon(date, status),
+            child: _getStampIcon(status),
           ),
         ),
       ],
     );
   }
 
-  Widget _getStampIcon(DateTime date, String status) {
-    switch (status) {
-      case '완료':
+  Widget _getStampIcon(AttendanceStatus data) {
+    switch (data) {
+      case AttendanceStatus.complete:
         return SvgPicture.asset('assets/icons/common/work_circle_check.svg',
             width: 62);
-      case '노력필요':
+      case AttendanceStatus.warning:
         return SvgPicture.asset('assets/icons/common/work_circle_warning.svg',
             width: 62);
-      case '업무불참':
+      case AttendanceStatus.absent:
         return SvgPicture.asset('assets/icons/common/work_circle_dangerous.svg',
             width: 62);
-      default:
-        return Container(
-          child: Text(
-            '${date.month}월 ${date.day}일',
-            style: FontSystem.KR10B.copyWith(
-              color: ColorSystem.white.withOpacity(0.7),
-            ),
+      case AttendanceStatus.upcoming:
+        return Text(
+          '일',
+          style: FontSystem.KR10B.copyWith(
+            color: ColorSystem.white.withOpacity(0.7),
           ),
         );
     }
   }
 
-  String _getMockStampStatus(int index) {
-    // 예시 로직 - 실제로는 서버에서 받아온 데이터를 사용해야 함
-    if (index < 2) return '완료';
-    if (index == 2) return '노력필요';
-    if (index == 4) return '업무불참';
-    return '';
+// 상태값 가져오기 (예시)
+  AttendanceStatus _getMockStatus(int dayIndex) {
+    if (dayIndex < 2) return AttendanceStatus.complete;
+    if (dayIndex == 2) return AttendanceStatus.warning;
+    if (dayIndex == 4) return AttendanceStatus.absent;
+    return AttendanceStatus.upcoming;
   }
 }
