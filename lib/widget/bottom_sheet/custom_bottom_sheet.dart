@@ -167,7 +167,7 @@ class ReportBottomSheet extends BaseWidget<ChattingRoomViewModel> {
               onPressed: viewModel.hasImage
                   ? () {
                       //TODO-[규진] 보고하기 API 연동 필요
-                      // 보고하기 로직
+                      viewModel.sendMessage(viewModel.chatRoomId);
                       Get.back();
                     }
                   : null,

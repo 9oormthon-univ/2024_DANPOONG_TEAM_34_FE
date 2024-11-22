@@ -2,69 +2,77 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
+import 'package:rebootOffice/view/base/base_widget.dart';
+import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 
-class StatusCard extends StatefulWidget {
-  const StatusCard({Key? key}) : super(key: key);
-
+class StatusCard extends BaseWidget<StatisticsViewModel> {
   @override
-  State<StatusCard> createState() => _StatusBarState();
-}
-
-class _StatusBarState extends State<StatusCard> {
-  bool isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isPressed = !isPressed;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        width: Get.width * 0.9,
-        height: 120,
-        decoration: BoxDecoration(
-          color: ColorSystem.blue.shade500,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              isPressed ? '목표까지 앞으로 7일' : '일상회복팀 | 인턴',
-              style: FontSystem.KR14B.copyWith(color: ColorSystem.white),
-            ),
-            const Spacer(),
-            _buildLevels(),
-            _buildProgressSteps(),
-          ],
+  Widget buildView(BuildContext context) {
+    return Obx(
+      () => GestureDetector(
+        onTap: () {
+          viewModel.setIsTouched(!viewModel.isTouched);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          width: Get.width * 0.9,
+          height: 120,
+          decoration: BoxDecoration(
+            color: ColorSystem.blue.shade500,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                viewModel.isTouched
+                    ? '목표까지 앞으로 ${viewModel.periodState.remainPeriod} 일'
+                    : '일상회복팀 | ${_getEmployeeStatus()}',
+                style: FontSystem.KR14B.copyWith(color: ColorSystem.white),
+              ),
+              const Spacer(),
+              _buildLevels(),
+              _buildProgressSteps(),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  String _getEmployeeStatus() {
+    final totalPeriod = viewModel.periodState.contractPeriod;
+    final remainPeriod = viewModel.periodState.remainPeriod;
+    final progressPeriod = viewModel.periodState.progressPeriod;
+
+    if (remainPeriod <= 0) {
+      return '정식사원';
+    } else if (progressPeriod >= (totalPeriod / 2) - 1) {
+      return '수습';
+    } else {
+      return '인턴';
+    }
+  }
+
   Widget _buildLevels() {
     // 예시 값들 (실제 앱에서는 이 값들을 동적으로 설정해야 함)
-    final totalDays = 30; // 선택한 총 일수
-    final spentDays = 5; // 현재까지 보낸 일수
+    final totalDays = viewModel.periodState.contractPeriod; // 선택한 총 일수
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          isPressed ? '1일' : '인턴',
+          viewModel.isTouched ? '1일' : '인턴',
           style: FontSystem.KR12B.copyWith(color: ColorSystem.white),
         ),
         const Spacer(),
         Text(
-          isPressed ? '${(totalDays - spentDays) ~/ 2}일' : '수습',
+          viewModel.isTouched ? '${(totalDays) ~/ 2}일' : '수습',
           style: FontSystem.KR12B.copyWith(color: ColorSystem.white),
         ),
         const Spacer(),
         Text(
-          isPressed ? '${totalDays}일' : '정식사원',
+          viewModel.isTouched ? '${totalDays}일' : '정식사원',
           style: FontSystem.KR12B.copyWith(color: ColorSystem.white),
         ),
       ],
@@ -72,7 +80,10 @@ class _StatusBarState extends State<StatusCard> {
   }
 
   Widget _buildProgressSteps() {
-    final currentStep = 5;
+    final tenPercent = viewModel.periodState.contractPeriod ~/ 10;
+    //전체 일 / 10 으로 퍼센트 생성
+    final currentStep =
+        viewModel.periodState.progressPeriod / tenPercent; // 현재까지 보낸 일수
 
     return Row(
       children: List.generate(10, (index) {
@@ -93,8 +104,8 @@ class _StatusBarState extends State<StatusCard> {
     return Row(
       children: [
         Container(
-          width: Get.width * 0.072,
-          height: 12,
+          width: Get.width * 0.077,
+          height: 14,
           decoration: BoxDecoration(
             borderRadius: isFirst
                 ? const BorderRadius.only(
@@ -106,6 +117,13 @@ class _StatusBarState extends State<StatusCard> {
                         bottomRight: Radius.circular(10))
                     : null,
             color: ColorSystem.white.withOpacity(0.3),
+            boxShadow: [
+              BoxShadow(
+                color: ColorSystem.black.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: ClipRRect(
             borderRadius: isFirst
@@ -133,7 +151,7 @@ class _StatusBarState extends State<StatusCard> {
             ),
           ),
         ),
-        if (index < 9) const SizedBox(width: 4),
+        if (index < 9) const SizedBox(width: 1),
       ],
     );
   }
