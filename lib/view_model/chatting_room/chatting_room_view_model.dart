@@ -3,54 +3,52 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rebootOffice/model/chatting/chat_state.dart';
+import 'package:rebootOffice/repository/chatting/chatting_repository.dart';
+import 'package:rebootOffice/utility/functions/log_util.dart';
 
 class ChattingRoomViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* -------------------- DI Fields ----------------------- */
   /* ------------------------------------------------------ */
+  late final ChattingRepository _chattingRepository;
 
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
-  late final PageController _pageController;
-
-  late final RxBool _isLoadingWhenOpenDialog;
+  final RxString _selectedChatType = 'LUNCH'.obs;
 
   late final _messageController = TextEditingController();
-  late final _messages = <ChatMessage>[].obs;
+  late final RxList<ChatState> _chatList = <ChatState>[].obs;
 
   late final RxBool _hasImage = false.obs;
   late final Rx<File?> _imageFile = Rx<File?>(null);
   late final TextEditingController _contentController = TextEditingController();
   late final ImagePicker _picker = ImagePicker();
-
+  late final RxInt _chatRoomId = 0.obs;
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
   /* ------------------------------------------------------ */
-  PageController get pageController => _pageController;
-
-  bool get isLoadingWhenOpenDialog => _isLoadingWhenOpenDialog.value;
 
   TextEditingController get messageController => _messageController;
-  List<ChatMessage> get messages => _messages;
+  List<ChatState> get chatList => _chatList;
 
   bool get hasImage => _hasImage.value;
   File? get imageFile => _imageFile.value;
   TextEditingController get contentController => _contentController;
   ImagePicker get picker => _picker;
+  String get selectedChatType => _selectedChatType.value;
 
+  int get chatRoomId => _chatRoomId.value;
+  set selectedChatType(String value) => _selectedChatType.value = value;
+  set setChatRoomId(int value) => _chatRoomId.value = value;
   @override
   void onInit() {
     super.onInit();
     // Dependency Injection
-
+    _chattingRepository = Get.find<ChattingRepository>();
     // Initialize private fields
-    _pageController = PageController(viewportFraction: 0.83);
-
-    _isLoadingWhenOpenDialog = false.obs;
   }
 
   @override
@@ -58,19 +56,71 @@ class ChattingRoomViewModel extends GetxController {
     super.onReady();
   }
 
-  void sendMessage() {
-    if (messageController.text.trim().isEmpty) return;
-
-    messages.add(
-      ChatMessage(
-        sender: '규진 인턴',
-        content: messageController.text,
-        time: DateFormat('HH:mm').format(DateTime.now()),
-      ),
-    );
-
-    messageController.clear();
+  Future<void> fetchChatList(int chatId) async {
+    _chatList.value = await _chattingRepository.readChatList(chatId);
+    _chatRoomId.value = chatId;
   }
+
+  Future<void> sendMessage(int chatId) async {
+    if (_contentController.text.trim().isEmpty) return;
+
+    try {
+      // 사용자 메시지 생성
+      final userMessage = ChatState(
+        chatContent: _contentController.text,
+        imageUrl: _imageFile.value?.path, // 로컬 이미지 경로
+        createAt: DateTime.now(),
+        speaker: "USER",
+      );
+
+      // 먼저 사용자 메시지를 리스트에 추가
+      _chatList.add(userMessage);
+
+      // API 호출
+      final response = await _chattingRepository.sendChatMessage(
+        chatId,
+        _contentController.text,
+        _selectedChatType.value,
+        _imageFile.value,
+      );
+
+      // AI 응답 메시지 생성
+      final aiMessage = ChatState(
+          chatContent: response.body['chatContent'],
+          imageUrl: null,
+          createAt: DateTime.now(),
+          speaker: "AI");
+
+      // AI 응답을 리스트에 추가
+      _chatList.add(aiMessage);
+
+      // 입력 필드 및 이미지 초기화
+      _contentController.clear();
+      _imageFile.value = null;
+      _hasImage.value = false;
+      _chatRoomId.value = 0;
+    } catch (e) {
+      // 에러 발생 시 마지막 메시지 제거 (사용자 메시지 롤백)
+      // if (_chatList.isNotEmpty) {
+      //   _chatList.removeLast();
+      // }
+      LogUtil.error(e);
+    }
+  }
+
+  // void sendMessage() {
+  //   if (messageController.text.trim().isEmpty) return;
+  //
+  //   messages.add(
+  //     ChatMessage(
+  //       sender: '규진 인턴',
+  //       content: messageController.text,
+  //       time: DateFormat('HH:mm').format(DateTime.now()),
+  //     ),
+  //   );
+  //
+  //   messageController.clear();
+  // }
 
   Future<void> takePhoto() async {
     try {
