@@ -46,69 +46,10 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
               department: '슈숩',
               email: 'nuykeeh@gmail.com',
               phone: '리부트오피스이메일'),
-          const SizedBox(height: 4),
-          ElevatedButton(
-            onPressed: () {
-              // 명함스크린으로 이동
-            },
-            style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
-                shadowColor: Colors.transparent,
-                overlayColor: Colors.transparent,
-                backgroundColor: const Color(0xffe5efff),
-                fixedSize: const Size(170, 54),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                side: const BorderSide(
-                    width: 1.0,
-                    color: Color(
-                      0xFF0066FF,
-                    ))),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.to(
-                      () => const OnboardingCardScreen(),
-                    );
-                  },
-                  child: Text(
-                    '명함을 확인해보세요!',
-                    style: FontSystem.KR14R
-                        .copyWith(color: const Color(0xFF0066FF)),
-                  ),
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios_sharp,
-                  size: 14,
-                  color: Color(0xFF0066FF),
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 8),
+          _buildNavigateToCard(),
           const Spacer(),
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: ColorSystem.blue.shade500,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: RoundedRectangleTextButton(
-                text: '근로계약서 작성하러 가기',
-                textStyle: FontSystem.KR16B.copyWith(
-                  color: ColorSystem.white,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                onPressed: () {
-                  // TO DO : Register로 이동
-                }),
-          ),
+          _buildConfirmButton(),
         ],
       ),
     );
@@ -123,6 +64,46 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
         ),
         SizedBox(height: 16),
       ],
+    );
+  }
+
+  Widget _buildConfirmButton() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: ColorSystem.blue.shade500,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: RoundedRectangleTextButton(
+          text: '근로계약서 작성하러 가기',
+          textStyle: FontSystem.KR16B.copyWith(
+            color: ColorSystem.white,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          onPressed: () {
+            // TO DO : Register로 이동
+          }),
+    );
+  }
+
+  Widget _buildNavigateToCard() {
+    return RoundedRectangleTextButton(
+      text: "명함을 확인해보세요!",
+      textStyle: FontSystem.KR14M.copyWith(color: ColorSystem.Blue),
+      width: 164,
+      height: 54,
+      backgroundColor: ColorSystem.lightBlue,
+      borderSide: BorderSide(
+        color: ColorSystem.Blue,
+        width: 1.0,
+      ),
+      onPressed: () {
+        Get.to(
+          () => const OnboardingCardScreen(),
+          transition: Transition.rightToLeft,
+          duration: const Duration(milliseconds: 300),
+        );
+      },
     );
   }
 }

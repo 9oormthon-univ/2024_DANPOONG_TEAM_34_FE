@@ -23,65 +23,7 @@ class OnboardingLoadScreen extends BaseScreen<OnboardingViewModel> {
     return Stack(
       children: [
         _buildAnimatedBackground(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 48),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(children: [
-                Icon(
-                  Icons.circle,
-                  color: ColorSystem.grey.shade600,
-                  size: 8,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "제출하신 이력서를 검토하고 있습니다…",
-                  style:
-                      TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-                )
-              ]),
-              const SizedBox(
-                height: 36,
-              ),
-              Row(children: [
-                Icon(
-                  Icons.circle,
-                  color: ColorSystem.grey.shade600,
-                  size: 8,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "지원자의 역량을 분석하고 있습니다…",
-                  style:
-                      TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-                )
-              ]),
-              const SizedBox(
-                height: 36,
-              ),
-              Row(children: [
-                Icon(
-                  Icons.circle,
-                  color: ColorSystem.grey.shade600,
-                  size: 8,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "최종 회의를 통해 결정 중입니다…",
-                  style:
-                      TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-                )
-              ]),
-            ],
-          ),
-        ),
+        _buildLoadingText(),
       ],
     );
   }
@@ -95,6 +37,74 @@ class OnboardingLoadScreen extends BaseScreen<OnboardingViewModel> {
       child: Container(),
     );
   }
+}
+
+Widget _buildLoadingText() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 48),
+    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      _buildFirstText(),
+      const SizedBox(
+        height: 36,
+      ),
+      _buildSecondText(),
+      const SizedBox(
+        height: 36,
+      ),
+      _buildThirdText(),
+    ]),
+  );
+}
+
+Widget _buildFirstText() {
+  return Row(children: [
+    Icon(
+      Icons.circle,
+      color: ColorSystem.grey.shade600,
+      size: 8,
+    ),
+    const SizedBox(
+      width: 8,
+    ),
+    Text(
+      "제출하신 이력서를 검토하고 있습니다…",
+      style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
+    )
+  ]);
+}
+
+Widget _buildSecondText() {
+  return Row(children: [
+    Icon(
+      Icons.circle,
+      color: ColorSystem.grey.shade600,
+      size: 8,
+    ),
+    const SizedBox(
+      width: 8,
+    ),
+    Text(
+      "지원자의 역량을 분석하고 있습니다…",
+      style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
+    )
+  ]);
+}
+
+Widget _buildThirdText() {
+  return Row(children: [
+    Icon(
+      Icons.circle,
+      color: ColorSystem.grey.shade600,
+      size: 8,
+    ),
+    const SizedBox(
+      width: 8,
+    ),
+    Text(
+      "최종 회의를 통해 결정 중입니다…",
+      style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
+    )
+  ]);
 }
 
 class CirclePainter extends CustomPainter {

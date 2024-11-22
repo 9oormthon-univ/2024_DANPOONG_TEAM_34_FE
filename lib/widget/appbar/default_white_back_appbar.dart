@@ -42,9 +42,10 @@ class DefaultWhiteBackAppBar extends StatelessWidget {
           ),
         ),
         icon: SvgPicture.asset(
-          "assets/icons/appbar/arrow_back_white.svg",
+          "assets/icons/appbar/arrow_back_black.svg",
           width: 24,
           height: 24,
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
         ),
         onPressed: onBackPress,
       ),

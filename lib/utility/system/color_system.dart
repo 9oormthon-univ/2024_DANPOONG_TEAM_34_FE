@@ -19,6 +19,9 @@ abstract class ColorSystem {
   /// Mental Primary Color
   static Color lightBlue = const Color(0xFFE1EAFC);
 
+  /// FocusBorder  Primary Color
+  static Color Blue = const Color(0xFF0066FF);
+
   /// Speech Bubble Color
   static Color lightBeige = const Color(0xFFF3F1EE);
 
