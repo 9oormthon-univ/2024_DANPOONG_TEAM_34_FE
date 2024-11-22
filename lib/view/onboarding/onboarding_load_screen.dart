@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
 
@@ -7,70 +8,76 @@ class OnboardingLoadScreen extends BaseScreen<OnboardingViewModel> {
   const OnboardingLoadScreen({super.key});
 
   @override
-  bool get wrapWithInnerSafeArea => true;
+  bool get wrapWithInnerSafeArea => false;
 
   @override
-  bool get setBottomInnerSafeArea => true;
+  bool get setBottomInnerSafeArea => false;
 
   @override
-  Color? get screenBackgroundColor => const Color(0xFF0B1432);
+  Color? get screenBackgroundColor => ColorSystem.blue.shade500;
+
+  @override
+  Color? get unSafeAreaColor => ColorSystem.blue.shade500;
 
   @override
   Widget buildBody(BuildContext context) {
     return Stack(
       children: [
         _buildAnimatedBackground(),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 48),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 48),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(children: [
                 Icon(
                   Icons.circle,
-                  color: Color(0xFF999999),
+                  color: ColorSystem.grey.shade600,
                   size: 8,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8,
                 ),
                 Text(
                   "제출하신 이력서를 검토하고 있습니다…",
-                  style: TextStyle(fontSize: 18, color: Color(0xFF999999)),
+                  style:
+                      TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
                 )
               ]),
-              SizedBox(
+              const SizedBox(
                 height: 36,
               ),
               Row(children: [
                 Icon(
                   Icons.circle,
-                  color: Color(0xFF999999),
+                  color: ColorSystem.grey.shade600,
                   size: 8,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8,
                 ),
                 Text(
                   "지원자의 역량을 분석하고 있습니다…",
-                  style: TextStyle(fontSize: 18, color: Color(0xFF999999)),
+                  style:
+                      TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
                 )
               ]),
-              SizedBox(
+              const SizedBox(
                 height: 36,
               ),
               Row(children: [
                 Icon(
                   Icons.circle,
-                  color: Color(0xFF999999),
+                  color: ColorSystem.grey.shade600,
                   size: 8,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8,
                 ),
                 Text(
                   "최종 회의를 통해 결정 중입니다…",
-                  style: TextStyle(fontSize: 18, color: Color(0xFF999999)),
+                  style:
+                      TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
                 )
               ]),
             ],
@@ -95,7 +102,7 @@ class CirclePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = const Color(0xFF082B6A)
+      ..color = ColorSystem.white.withOpacity(.2)
       ..style = PaintingStyle.fill;
 
     double radius =

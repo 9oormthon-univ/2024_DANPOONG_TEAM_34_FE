@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view/onboarding/component/gender_selection.dart';
-import 'package:rebootOffice/view/onboarding/component/onboarding_label.dart';
-import 'package:rebootOffice/view/onboarding/component/onboarding_title.dart';
+import 'package:rebootOffice/view/onboarding/onboarding_load_screen.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
+import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
 
 class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
   const OnboardingScreen({super.key});
@@ -47,6 +48,7 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
               onPageChanged: (index) {
                 viewModel.currentPageIndex = index; // ViewModel과 동기화
               },
+              physics: const NeverScrollableScrollPhysics(),
               children: [
                 _buildNameInputStep(),
                 _buildBirthInputStep(),
@@ -62,20 +64,21 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
 
   Widget _buildPaginationIndicator(int step) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(4, (index) {
           return AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             margin: const EdgeInsets.symmetric(horizontal: 4),
-            width: 6,
+            width: step == index ? 20 : 6,
             height: 6,
             decoration: BoxDecoration(
               color: step == index
                   ? const Color(0xFF111111)
                   : const Color(0xFFcccccc),
-              shape: BoxShape.circle,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(16),
             ),
           );
         }),
@@ -90,11 +93,11 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       child: Form(
         key: formKey,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const OnboardingTitle(title: '안녕하세요!\n당신의 이름을 알려주세요.'),
+          _buildTitleName(),
           const SizedBox(
             height: 42,
           ),
-          const OnboardingLabel(label: '이름'),
+          _buildLabelName(),
           const SizedBox(
             height: 12,
           ),
@@ -142,30 +145,60 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
             ),
           ),
           const Spacer(),
-          SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: ElevatedButton(
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  // 유효성 검사 통과 시 다음 단계로 이동
-                  viewModel.goToNextStep();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xFF0C1C56),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16), // 둥근 모서리
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 32.0), // 내부 여백
+          Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                color: viewModel.isNameValid
+                    ? ColorSystem.blue.shade500
+                    : ColorSystem.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text("완료"),
-            ),
-          ),
+              child: RoundedRectangleTextButton(
+                text: '완료',
+                textStyle: FontSystem.KR16B.copyWith(
+                  color: viewModel.isNameValid
+                      ? ColorSystem.white
+                      : ColorSystem.grey.shade400,
+                ),
+                padding: viewModel.isNameValid
+                    ? const EdgeInsets.symmetric(vertical: 16)
+                    : const EdgeInsets.symmetric(vertical: 2),
+                onPressed: viewModel.isNameValid
+                    ? () {
+                        if (formKey.currentState!.validate()) {
+                          // 유효성 검사 통과 시 다음 단계로 이동
+                          viewModel.goToNextStep();
+                        }
+                      }
+                    : null,
+              ))
         ]),
       ),
+    );
+  }
+
+  Widget _buildTitleName() {
+    return const Column(
+      children: [
+        Text(
+          '안녕하세요!\n당신의 이름을 알려주세요',
+          style: FontSystem.KR24B,
+        ),
+        SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildLabelName() {
+    return const Column(
+      children: [
+        Text(
+          '이름',
+          style: FontSystem.KR14R,
+        ),
+        SizedBox(height: 16),
+      ],
     );
   }
 
@@ -176,11 +209,11 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       child: Form(
         key: formKey,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const OnboardingTitle(title: '생년월일을\n입력해 주세요.'),
+          _buildTitleBirth(),
           const SizedBox(
             height: 42,
           ),
-          const OnboardingLabel(label: '생년월일'),
+          _buildLabelBirth(),
           const SizedBox(
             height: 12,
           ),
@@ -228,41 +261,60 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
             ),
           ),
           const Spacer(),
-          SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: ElevatedButton(
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  // 유효성 검사 통과 시 다음 단계로 이동
-                  viewModel.goToNextStep();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xFF0C1C56), // 버튼 텍스트 색상 (예: 흰색)
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16), // 둥근 모서리
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 32.0), // 내부 여백
+          Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                color: viewModel.isBirthValid
+                    ? ColorSystem.blue.shade500
+                    : ColorSystem.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
               ),
-              // .copyWith(
-              //   // 비활성화 상태의 스타일
-              //   surfaceTintColor: WidgetStateProperty.all(
-              //       const Color(0xFF999999)), // 비활성화된 상태의 텍스트 색상 (예: 회색)
-              //   backgroundColor: WidgetStateProperty.all(
-              //       const Color(0xFFF1F1F5)), // 비활성화된 상태의 배경색 (예: 밝은 회색)
-              //   side: WidgetStateProperty.all(
-              //     const BorderSide(
-              //         color: Color(0xFFE5E5EC)), // 비활성화 상태의 테두리 색상 (예: 연한 회색)
-              //   ),
-              // ),
-              child: const Text("완료"),
-            ),
-          ),
+              child: RoundedRectangleTextButton(
+                text: '완료',
+                textStyle: FontSystem.KR16B.copyWith(
+                  color: viewModel.isBirthValid
+                      ? ColorSystem.white
+                      : ColorSystem.grey.shade400,
+                ),
+                padding: viewModel.isBirthValid
+                    ? const EdgeInsets.symmetric(vertical: 16)
+                    : const EdgeInsets.symmetric(vertical: 2),
+                onPressed: viewModel.isBirthValid
+                    ? () {
+                        if (formKey.currentState!.validate()) {
+                          // 유효성 검사 통과 시 다음 단계로 이동
+                          viewModel.goToNextStep();
+                        }
+                      }
+                    : null,
+              ))
         ]),
       ),
+    );
+  }
+
+  Widget _buildTitleBirth() {
+    return const Column(
+      children: [
+        Text(
+          '생년월일을\n입력해 주세요.',
+          style: FontSystem.KR24B,
+        ),
+        SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildLabelBirth() {
+    return const Column(
+      children: [
+        Text(
+          '생년월일',
+          style: FontSystem.KR14R,
+        ),
+        SizedBox(height: 16),
+      ],
     );
   }
 
@@ -272,9 +324,9 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const OnboardingTitle(title: '성별을 선택해주세요.'),
+          _buildTitleGender(),
           const SizedBox(height: 42),
-          const OnboardingLabel(label: '성별'),
+          _buildLabelGender(),
           const SizedBox(height: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,38 +351,57 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
             ],
           ),
           const Spacer(),
-          SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: ElevatedButton(
-              onPressed: viewModel.selectedGender != null
-                  ? () => viewModel.goToNextStep()
-                  : null, // 성별 선택 안 된 경우 버튼 비활성화
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xFF0C1C56), // 버튼 텍스트 색상 (예: 흰색)
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16), // 둥근 모서리
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 32.0), // 내부 여백
+          Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                color: viewModel.selectedGender != null
+                    ? ColorSystem.blue.shade500
+                    : ColorSystem.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
               ),
-              // .copyWith(
-              //   // 비활성화 상태의 스타일
-              //   surfaceTintColor: WidgetStateProperty.all(
-              //       const Color(0xFF999999)), // 비활성화된 상태의 텍스트 색상 (예: 회색)
-              //   backgroundColor: WidgetStateProperty.all(
-              //       const Color(0xFFF1F1F5)), // 비활성화된 상태의 배경색 (예: 밝은 회색)
-              //   side: WidgetStateProperty.all(
-              //     const BorderSide(
-              //         color: Color(0xFFE5E5EC)), // 비활성화 상태의 테두리 색상 (예: 연한 회색)
-              //   ),
-              // ),
-              child: const Text("완료"),
-            ),
-          ),
+              child: RoundedRectangleTextButton(
+                text: '완료',
+                textStyle: FontSystem.KR16B.copyWith(
+                  color: viewModel.selectedGender != null
+                      ? ColorSystem.white
+                      : ColorSystem.grey.shade400,
+                ),
+                padding: viewModel.selectedGender != null
+                    ? const EdgeInsets.symmetric(vertical: 16)
+                    : const EdgeInsets.symmetric(vertical: 2),
+                onPressed: viewModel.selectedGender != null
+                    ? () {
+                        viewModel.goToNextStep();
+                      }
+                    : null,
+              ))
         ],
       ),
+    );
+  }
+
+  Widget _buildTitleGender() {
+    return const Column(
+      children: [
+        Text(
+          '성별을\n선택해주세요.',
+          style: FontSystem.KR24B,
+        ),
+        SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildLabelGender() {
+    return const Column(
+      children: [
+        Text(
+          '성별',
+          style: FontSystem.KR14R,
+        ),
+        SizedBox(height: 16),
+      ],
     );
   }
 
@@ -341,11 +412,11 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       child: Form(
         key: formKey,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const OnboardingTitle(title: '안녕하세요!\n당신의 이름을 알려주세요.'),
+          _buildTitleMotivate(),
           const SizedBox(
             height: 42,
           ),
-          const OnboardingLabel(label: '이름'),
+          _buildLabelMotivate(),
           const SizedBox(
             height: 12,
           ),
@@ -399,64 +470,97 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
           const SizedBox(
             height: 28,
           ),
-          ExpansionTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16), // 둥근 모서리
-              side: const BorderSide(
-                  color: Color(0xFFE5E5EC), width: 1), // 테두리 색과 두께
-            ),
-            collapsedShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16), // 둥근 모서리
-              side: const BorderSide(
-                  color: Color(0xFFE5E5EC), width: 1), // 테두리 색과 두께
-            ),
-            title: const Text(
-              '예시 질문을 확인해 보세요',
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF767676), // 글자색
-              ),
-            ),
-            childrenPadding: const EdgeInsets.all(16),
-            trailing: const Icon(
-              Icons.expand_more,
-              color: Color(0xFF767676), // 아이콘 색
-            ), // 펼쳐진 영역의 padding
-            children: const [
-              Text(
-                '본인의 특징, 좋아하는 것, 관심 있는 분야를\n간단히 이야기해 보고 이곳에서 하고 싶은 일이나 이루고 싶은 목표를 적어 보세요.',
-                style: TextStyle(fontSize: 14, color: Color(0xFF555555)),
-              ),
-            ],
-          ),
+          _buildExample(),
           const Spacer(),
-          SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: ElevatedButton(
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  // 유효성 검사 통과 시 다음 단계로 이동
-                  // onboarding_load_screen으로 이동
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xFF0C1C56), // 버튼 텍스트 색상 (예: 흰색)
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16), // 둥근 모서리
+          Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                color: viewModel.isMotivateValid
+                    ? ColorSystem.blue.shade500
+                    : ColorSystem.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: RoundedRectangleTextButton(
+                text: '이력서 제출하기',
+                textStyle: FontSystem.KR16B.copyWith(
+                  color: viewModel.isMotivateValid
+                      ? ColorSystem.white
+                      : ColorSystem.grey.shade400,
                 ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 32.0), // 내부 여백
-              ),
-              child: const Text(
-                "이력서 제출하기",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
+                padding: viewModel.isMotivateValid
+                    ? const EdgeInsets.symmetric(vertical: 16)
+                    : const EdgeInsets.symmetric(vertical: 2),
+                onPressed: (viewModel.isMotivateValid &&
+                        viewModel.isBirthValid &&
+                        viewModel.isNameValid &&
+                        viewModel.selectedGender != null)
+                    ? () {
+                        Get.to(
+                          () => const OnboardingLoadScreen(),
+                          transition: Transition.rightToLeft,
+                          duration: const Duration(milliseconds: 300),
+                        );
+                      }
+                    : null,
+              ))
         ]),
       ),
+    );
+  }
+
+  Widget _buildTitleMotivate() {
+    return const Column(
+      children: [
+        Text(
+          '리부트 오피스의\n지원동기를 적어주세요.',
+          style: FontSystem.KR24B,
+        ),
+        SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildLabelMotivate() {
+    return const Column(
+      children: [
+        Text(
+          '자기소개 및 지원동기',
+          style: FontSystem.KR14R,
+        ),
+        SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildExample() {
+    return ExpansionTile(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16), // 둥근 모서리
+        side: const BorderSide(color: Color(0xFFE5E5EC), width: 1), // 테두리 색과 두께
+      ),
+      collapsedShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16), // 둥근 모서리
+        side: const BorderSide(color: Color(0xFFE5E5EC), width: 1), // 테두리 색과 두께
+      ),
+      title: const Text(
+        '무엇을 적어야 할지 고민되시나요?',
+        style: TextStyle(
+          fontSize: 14,
+          color: Color(0xFF767676), // 글자색
+        ),
+      ),
+      childrenPadding: const EdgeInsets.all(16),
+      trailing: const Icon(
+        Icons.expand_more,
+        color: Color(0xFF767676), // 아이콘 색
+      ), // 펼쳐진 영역의 padding
+      children: const [
+        Text(
+          '본인의 특징, 좋아하는 것, 관심 있는 분야를\n간단히 이야기해 보고 이곳에서 하고 싶은 일이나 이루고 싶은 목표를 적어 보세요.',
+          style: TextStyle(fontSize: 14, color: Color(0xFF555555)),
+        ),
+      ],
     );
   }
 }

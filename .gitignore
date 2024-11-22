@@ -29,6 +29,8 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+.DS_Store
+GoogleService-Info.plist
 
 ### Dart Patch ###
 # dotenv environment variables file
