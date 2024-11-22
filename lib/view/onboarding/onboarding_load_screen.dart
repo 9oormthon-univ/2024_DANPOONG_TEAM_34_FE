@@ -55,57 +55,6 @@ class OnboardingLoadScreen extends BaseScreen<OnboardingViewModel> {
     );
   }
 
-  Widget _buildFirstText() {
-    return Row(children: [
-      Icon(
-        Icons.circle,
-        color: ColorSystem.grey.shade600,
-        size: 8,
-      ),
-      const SizedBox(
-        width: 8,
-      ),
-      Text(
-        "제출하신 이력서를 검토하고 있습니다…",
-        style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-      )
-    ]);
-  }
-
-  Widget _buildSecondText() {
-    return Row(children: [
-      Icon(
-        Icons.circle,
-        color: ColorSystem.grey.shade600,
-        size: 8,
-      ),
-      const SizedBox(
-        width: 8,
-      ),
-      Text(
-        "지원자의 역량을 분석하고 있습니다…",
-        style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-      )
-    ]);
-  }
-
-  Widget _buildThirdText() {
-    return Row(children: [
-      Icon(
-        Icons.circle,
-        color: ColorSystem.grey.shade600,
-        size: 8,
-      ),
-      const SizedBox(
-        width: 8,
-      ),
-      Text(
-        "최종 회의를 통해 결정 중입니다…",
-        style: TextStyle(fontSize: 18, color: ColorSystem.grey.shade600),
-      )
-    ]);
-  }
-
   Widget _buildStepText(String text, IconData icon, bool isActive) {
     return Row(
       children: [

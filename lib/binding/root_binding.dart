@@ -3,6 +3,7 @@ import 'package:rebootOffice/view_model/chatting_list/chatting_room_list_view_mo
 import 'package:rebootOffice/view_model/chatting_room/chatting_room_view_model.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
 import 'package:rebootOffice/view_model/login/login_view_model.dart';
+import 'package:rebootOffice/view_model/register/register_view_model.dart';
 import 'package:rebootOffice/view_model/see_more/see_more_view_model.dart';
 import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 
@@ -22,6 +23,7 @@ class RootBinding extends Bindings {
     OnboardingBinding().dependencies();
     LoginBinding().dependencies();
     StatisticsBinding().dependencies();
+    RegisterBinding().dependencies();
   }
 }
 
@@ -85,5 +87,12 @@ class StatissticDetailBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<StatisticsViewModel>(() => StatisticsViewModel());
+  }
+}
+
+class RegisterBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<RegisterViewModel>(() => RegisterViewModel());
   }
 }
