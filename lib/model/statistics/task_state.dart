@@ -21,7 +21,7 @@ class TaskState {
       chatType: chatType ?? this.chatType,
       createdAt: createdAt ?? this.createdAt,
       imageUrl: imageUrl ?? this.imageUrl,
-      content: description ?? this.content,
+      content: description ?? content,
     );
   }
 
