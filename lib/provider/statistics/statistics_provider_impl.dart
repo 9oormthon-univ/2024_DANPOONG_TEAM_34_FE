@@ -35,4 +35,25 @@ class StatisticsProviderImpl extends BaseConnect implements StatisticsProvider {
 
     return response.body['data'];
   }
+
+  @override
+  Future<List<dynamic>> readUserTaskList() async {
+    Response response;
+    var year = DateTime.now().year;
+    var month = DateTime.now().month;
+    var day = DateTime.now().day;
+
+    try {
+      response = await get(
+        '/analysis/calendar-detail',
+        query: {
+          'date': '$year-$month-$day',
+        },
+      );
+    } catch (e) {
+      rethrow;
+    }
+
+    return response.body['data'];
+  }
 }
