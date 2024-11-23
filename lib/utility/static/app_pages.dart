@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
 import 'package:rebootOffice/binding/root_binding.dart';
 import 'package:rebootOffice/middleware/login_middleware.dart';
+import 'package:rebootOffice/middleware/on_boarding_middleware.dart';
 import 'package:rebootOffice/view/chatting_room/chatting_room_screen.dart';
 import 'package:rebootOffice/view/login/login_screen.dart';
+import 'package:rebootOffice/view/onboarding/onboarding_screen.dart';
+import 'package:rebootOffice/view/register/register_screen.dart';
 // import 'package:rebootOffice/middleware/login_middleware.dart';
 import 'package:rebootOffice/view/root/root_screen.dart';
 import 'package:rebootOffice/view/statistics_detail/statistics_detail_screen.dart';
@@ -16,33 +19,38 @@ List<GetPage> appPages = [
     binding: RootBinding(),
     middlewares: [
       LoginMiddleware(),
+      OnboardingMiddleware(),
     ],
   ),
-  // GetPage(
-  //   name: Routes.ON_BOARDING,
-  //   page: () => const On(),
-  //   binding: RootBinding(),
-  //   middlewares: [
-  //     // LoginMiddleware(),
-  //   ],
-  // ),
+  GetPage(
+    name: Routes.ON_BOARDING,
+    page: () => const OnboardingScreen(),
+    binding: OnboardingBinding(),
+    middlewares: [
+      LoginMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.REGISTER,
+    page: () => const RegisterScreen(),
+    binding: RegisterBinding(),
+    middlewares: [
+      LoginMiddleware(),
+    ],
+  ),
   GetPage(
     name: Routes.CHATTING_ROOM,
-    page: () {
-      return ChattingRoomScreen();
-    },
+    page: () => ChattingRoomScreen(),
     binding: ChattingRoomBinding(),
   ),
-
   GetPage(
     name: Routes.LOGIN,
     page: () => const LoginScreen(),
     binding: LoginBinding(),
-    middlewares: const [
+    middlewares: [
       // LoginMiddleware(),
     ],
   ),
-
   GetPage(
     name: Routes.STATISTICS_DETAIL,
     page: () => const StatisticsDetailScreen(),
