@@ -8,11 +8,11 @@ class DayItem extends StatelessWidget {
   final bool isSelected;
 
   const DayItem({
-    Key? key,
+    super.key,
     required this.weekday,
     required this.date,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

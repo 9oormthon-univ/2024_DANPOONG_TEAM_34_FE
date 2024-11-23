@@ -6,9 +6,9 @@ class WeekCalendarView extends StatelessWidget {
   final WeekState weekState;
 
   const WeekCalendarView({
-    Key? key,
+    super.key,
     required this.weekState,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
