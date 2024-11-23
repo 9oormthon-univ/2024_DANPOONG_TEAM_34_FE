@@ -104,6 +104,9 @@ class StatissticDetailBinding extends Bindings {
 class RegisterBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<RegisterViewModel>(() => RegisterViewModel());
+    Get.lazyPut<RegisterViewModel>(
+      () => RegisterViewModel(),
+      fenix: true, // 인스턴스가 필요할 때마다 새로 생성
+    );
   }
 }
