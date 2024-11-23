@@ -45,7 +45,7 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          '2024년 11월 6일 수요일',
+          '2024년 11월 24일 일요일',
           style: FontSystem.KR14R.copyWith(color: ColorSystem.grey.shade600),
         ),
       ),
