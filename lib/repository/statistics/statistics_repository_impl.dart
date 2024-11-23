@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:rebootOffice/model/statistics/attendance_state.dart';
 import 'package:rebootOffice/model/statistics/period_state.dart';
 import 'package:rebootOffice/model/statistics/task_state.dart';
 import 'package:rebootOffice/model/statistics/user_status_state.dart';
@@ -56,5 +57,19 @@ class StatisticsRepositoryImpl extends GetxService
     }
 
     return data.map((e) => TaskState.fromJson(e)).toList();
+  }
+
+  @override
+  Future<AttendanceState> readUserAttendanceList(int index) async {
+    Map<String, dynamic> data;
+
+    try {
+      data = await _statisticsProvider.readUserAttendanceList(index);
+      LogUtil.info("출석 데이터 조회 성공");
+    } catch (e) {
+      LogUtil.error(e);
+      return AttendanceState.initial();
+    }
+    return AttendanceState.fromJson(data);
   }
 }
