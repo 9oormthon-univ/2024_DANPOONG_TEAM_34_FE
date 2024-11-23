@@ -37,6 +37,7 @@ class AuthRepositoryImpl extends GetxService implements AuthRepository {
 
   @override
   Future<void> clearTokens() async {
+    LogUtil.info('clearTokens');
     await _tokenProvider.clearTokens();
   }
 }
