@@ -90,6 +90,16 @@ dependencies:
   # Flip Card
   flutter_flip_card: ^0.0.6
 
+  # Linear Progres Bar
+  linear_progress_bar: ^1.1.2
+
+  # Time Picker
+  scroll_datetime_picker: ^0.1.2
+
+  # Number Picker
+  numberpicker: ^2.1.2
+
+
   shared_preferences: any
   lottie: ^3.1.3
 dev_dependencies:

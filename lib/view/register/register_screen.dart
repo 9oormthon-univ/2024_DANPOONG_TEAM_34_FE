@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
@@ -8,6 +9,7 @@ import 'package:rebootOffice/view/home/home_screen.dart';
 import 'package:rebootOffice/view/register/component/multi_select_box.dart';
 import 'package:rebootOffice/view/register/component/select_box.dart';
 import 'package:rebootOffice/view/register/widget/aniamted_text_widget.dart';
+import 'package:rebootOffice/view/register/widget/scroll_time_picker.dart';
 import 'package:rebootOffice/view_model/register/register_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
 import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
@@ -46,8 +48,9 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
               onPageChanged: (index) {
                 viewModel.currentPageIndex = index;
               },
+              physics: const NeverScrollableScrollPhysics(),
               children: [
-                // _buildFirstPage(),
+                _buildFirstPage(),
                 _buildSecondPage(),
                 _buildThirdPage(),
                 _buildFourthPage(),
@@ -62,68 +65,61 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
   }
 
   Widget _buildPaginationIndicator(int step) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(5, (index) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            width: step == index ? 20 : 6,
-            height: 6,
-            decoration: BoxDecoration(
-              color: step == index
-                  ? const Color(0xFF111111)
-                  : const Color(0xFFcccccc),
-              borderRadius: BorderRadius.circular(16), // 둥근 모서리
-              shape: BoxShape.rectangle,
-            ),
-          );
-        }),
-      ),
+    const int totalSteps = 6; // 총 단계 수
+    return LinearProgressBar(
+      maxSteps: totalSteps, // 총 단계 설정
+      currentStep: step + 1, // 현재 단계 (0부터 시작하므로 +1)
+      progressColor: ColorSystem.Blue, // 진행된 부분 색상
+      backgroundColor: ColorSystem.lightBlue, // 배경 색상
+      minHeight: 5.0, // ProgressBar의 높이
+      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF111111)),
     );
   }
 
   Widget _buildFirstPage() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset('assets/images/npc_profile.png'),
-        const SizedBox(
-          height: 32,
-        ),
-        AnimatedTextWidget(
-          text: controller.currentTexts[controller.currentTextIndex],
-        ),
-        const Spacer(),
-        Container(
-          width: double.infinity,
-          height: 60,
-          decoration: BoxDecoration(
-            color: viewModel.isSelectWork
-                ? ColorSystem.blue.shade500
-                : ColorSystem.grey.shade200,
-            borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/profile_npc.png',
+            width: 200,
           ),
-          child: RoundedRectangleTextButton(
-            text: '다음',
-            textStyle: FontSystem.KR16B.copyWith(
-              color: viewModel.isSelectWork
-                  ? ColorSystem.white
-                  : ColorSystem.grey.shade400,
+          const SizedBox(
+            height: 32,
+          ),
+          _buildTitle(viewModel.displayText.value),
+          const Spacer(),
+          Container(
+            width: double.infinity,
+            height: 60,
+            decoration: BoxDecoration(
+              color: viewModel.isAnimating
+                  ? ColorSystem.grey.shade200
+                  : ColorSystem.blue.shade500,
+              borderRadius: BorderRadius.circular(12),
             ),
-            padding: viewModel.isSelectWork
-                ? const EdgeInsets.symmetric(vertical: 16)
-                : const EdgeInsets.symmetric(vertical: 2),
-            onPressed: viewModel.isSelectWork
-                ? () {
-                    viewModel.goToNextStep();
-                  }
-                : null,
+            child: RoundedRectangleTextButton(
+              text: '다음',
+              textStyle: FontSystem.KR16B.copyWith(
+                color: viewModel.isAnimating
+                    ? ColorSystem.grey.shade400
+                    : ColorSystem.white,
+              ),
+              padding: viewModel.isAnimating
+                  ? const EdgeInsets.symmetric(vertical: 2)
+                  : const EdgeInsets.symmetric(vertical: 16),
+              onPressed: !viewModel.isAnimating
+                  ? () {
+                      viewModel.goToNextStep();
+                    }
+                  : null,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -131,9 +127,16 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset('assets/images/profile_npc.png'),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Image.asset(
+              'assets/images/profile_npc.png',
+              width: 200,
+            ),
+          ),
           const SizedBox(height: 28),
           _buildTitle('근무가능 기간을 알려주세요!'),
           const SizedBox(height: 8),
@@ -219,14 +222,41 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
       child: Column(
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/profile_npc.png'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Image.asset('assets/images/profile_npc.png'),
+              ),
               const SizedBox(height: 28),
               _buildTitle('몇 시까지 출근하시겠어요?'),
               const SizedBox(height: 8),
               _buildLabel('선택하신 시간에 기상하셔서 기상 인증\n미션을 진행하게 됩니다'),
-              // const ScrollTimePicker(),
+              const SizedBox(
+                height: 16,
+              ),
+              const ScrollTimePicker(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: ColorSystem.blue.shade500,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: RoundedRectangleTextButton(
+                      text: '다음',
+                      textStyle: FontSystem.KR16B.copyWith(
+                        color: ColorSystem.white,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      onPressed: () {
+                        viewModel.goToNextStep();
+                      }),
+                ),
+              )
             ],
           ),
         ],
@@ -240,18 +270,22 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
       child: Column(
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/profile_npc.png',
-                  width: 120, height: 120, fit: BoxFit.cover),
-              const SizedBox(height: 28),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Image.asset('assets/images/profile_npc.png',
+                    width: 120, height: 120, fit: BoxFit.cover),
+              ),
+              const SizedBox(height: 20),
               _buildTitle('가능한 업무 영역은 어떻게 되나요?'),
               const SizedBox(height: 8),
               _buildLabel('선택하신 업무 범위를 기준으로\n미션이 부여됩니다'),
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 48),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -261,7 +295,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
                   textAlign: TextAlign.start,
                 ),
                 const SizedBox(
-                  height: 16,
+                  height: 4,
                 ),
                 Obx(
                   () => Column(
@@ -277,7 +311,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
                           }
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          padding: const EdgeInsets.symmetric(vertical: 4),
                           child: MultiSelectBox(
                             selector: option,
                             isSelected: isSelected,
@@ -328,18 +362,22 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
       child: Column(
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/profile_npc.png',
-                  width: 120, height: 120, fit: BoxFit.cover),
-              const SizedBox(height: 28),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Image.asset('assets/images/profile_npc.png',
+                    width: 120, height: 120, fit: BoxFit.cover),
+              ),
+              const SizedBox(height: 20),
               _buildTitle('가능한 업무 영역은 어떻게 되나요?'),
               const SizedBox(height: 8),
               _buildLabel('선택하신 업무 범위를 기준으로\n미션이 부여됩니다'),
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 48),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -398,7 +436,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
               padding: viewModel.isSelectWorkPlace
                   ? const EdgeInsets.symmetric(vertical: 16)
                   : const EdgeInsets.symmetric(vertical: 2),
-              onPressed: viewModel.isSelectWork
+              onPressed: viewModel.isSelectWorkPlace
                   ? () {
                       viewModel.goToNextStep();
                     }
@@ -453,6 +491,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
     return Text(
       title,
       style: FontSystem.KR24EB,
+      textAlign: TextAlign.center,
     );
   }
 

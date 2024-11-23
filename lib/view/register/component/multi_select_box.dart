@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MultiSelectBox extends StatelessWidget {
   const MultiSelectBox({
@@ -22,23 +23,28 @@ class MultiSelectBox extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Text(
-              selector,
-              style: TextStyle(
-                color: isSelected
-                    ? const Color(0xFF111111)
-                    : const Color(0xFF999999),
-                fontSize: 16,
+      child: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              isSelected
+                  ? SvgPicture.asset('assets/icons/common/check_box_blue.svg')
+                  : SvgPicture.asset('assets/icons/common/check_box.svg'),
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  selector,
+                  style: TextStyle(
+                    color: isSelected
+                        ? const Color(0xFF111111)
+                        : const Color(0xFF999999),
+                    fontSize: 16,
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
-      ),
+            ],
+          )),
     );
   }
 }

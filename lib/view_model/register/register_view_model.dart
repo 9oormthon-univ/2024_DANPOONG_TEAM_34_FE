@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,19 +16,11 @@ class RegisterViewModel extends GetxController {
   // 현재 페이지
   final RxInt _currentPageIndex = 0.obs;
 
-  // 현재 텍스트 애니메이션 인덱스
-  final RxInt _currentTextIndex = 0.obs;
-
   // 애니메이션 중인지 상태 관리
-  final RxBool _isAnimating = false.obs;
+  final RxBool _isAnimating = true.obs;
 
   // 텍스트 데이터
-  final List<String> _pageTexts = [
-    '안녕하세요 희균님!\n인사팀 팀장 리부트 입니다',
-    '지금부터 근로계약서를\n작성 하겠습니다',
-    '근로계약서는\n앞으로 주어질 업무를 결정 합니다',
-    '신중하게 작성 해주세요!'
-  ];
+  RxString displayText = '안녕하세요 희균님!\n인사팀 팀장 리부트 입니다'.obs;
 
   // 근무기간 선택 ("1주" 또는 "2주" 또는 "3주")
   final RxString _selectedWork = ''.obs;
@@ -44,8 +38,10 @@ class RegisterViewModel extends GetxController {
   ];
 
   // 시간 선택
-  var selectedHour = 6.obs;
-  var selectedMinute = 00.obs;
+  Rx<DateTime> selectedTimeHours = DateTime(2024, 1, 1, 7, 0).obs;
+  Rx<DateTime> selectedTimeMinutes = DateTime(2024, 1, 1, 0, 0).obs;
+
+  RxBool isChangeHours = false.obs;
 
   // /* ------------------------------------------------------ */
   // /* ----------------- Public Fields ---------------------- */
@@ -55,13 +51,7 @@ class RegisterViewModel extends GetxController {
   int get currentPageIndex => _currentPageIndex.value;
   set currentPageIndex(int value) => _currentPageIndex.value = value;
 
-  int get currentTextIndex => _currentTextIndex.value < currentTexts.length
-      ? _currentTextIndex.value
-      : 0;
-
   bool get isAnimating => _isAnimating.value;
-
-  List<String> get currentTexts => _pageTexts;
 
   // 주간 선택
   String? get selectedWork =>
@@ -82,25 +72,15 @@ class RegisterViewModel extends GetxController {
 
     // 페이지 컨트롤러 초기화
     _pageController = PageController(viewportFraction: 1);
-    // if (currentPageIndex == 0) {
-    //   startTextAnimation(); // 페이지 1에서만 애니메이션 시작
-    // }
+    if (currentPageIndex == 0) {
+      startTextChange(); // 페이지 1에서만 애니메이션 시작
+    }
   }
 
   @override
   void onClose() {
     _pageController.dispose();
     super.onClose();
-  }
-
-  /// 텍스트 애니메이션 시작
-  void startTextAnimation() async {
-    _isAnimating.value = true;
-    for (var i = 0; i < _pageTexts.length; i++) {
-      _currentTextIndex.value = i;
-      await Future.delayed(const Duration(seconds: 2));
-    }
-    _isAnimating.value = false; // 애니메이션 종료
   }
 
   // 근무 선택 함수
@@ -112,19 +92,18 @@ class RegisterViewModel extends GetxController {
     _selectedWorkPlace.value = work;
   }
 
-  // 시간 선택 함수
-  void updateHour(int hour) {
-    selectedHour.value = hour;
+  void updateSelectedHours(DateTime newTime) {
+    selectedTimeHours.value = newTime;
   }
 
-  void updateMinute(int minute) {
-    selectedMinute.value = minute;
+  void updateSelectedMinutes(DateTime updatedTime) {
+    selectedTimeMinutes.value = updatedTime;
   }
 
   /// 다음 페이지로 이동
   void goToNextStep() {
     try {
-      if (_currentPageIndex.value < 3) {
+      if (_currentPageIndex.value < 5) {
         if (_pageController.hasClients) {
           _pageController.nextPage(
             duration: const Duration(milliseconds: 300),
@@ -140,24 +119,20 @@ class RegisterViewModel extends GetxController {
       print("Error in goToNextStep: $e");
     }
   }
-  // void goToNextPage() async {
-  //   if (_isAnimating.value) {
-  //     return; // 애니메이션 중에는 페이지를 넘기지 않음
-  //   }
 
-  //   if (_currentPage.value < 3) {
-  //     _currentPage.value++;
-  //     _currentTextIndex.value = 0; // 텍스트 인덱스 초기화
-  //     if (_currentPage.value == 0) {
-  //       startTextAnimation(); // 페이지 1에서만 애니메이션 시작
-  //     }
-  //     await _pageController.nextPage(
-  //       duration: const Duration(milliseconds: 300),
-  //       curve: Curves.easeInOut,
-  //     );
-
-  //     // PageController가 업데이트된 후 currentPage와 동기화
-  //     update();
-  //   }
-  // }
+  // 텍스트 변경을 시작하는 함수
+  void startTextChange() {
+    Timer.periodic(const Duration(seconds: 2), (timer) {
+      // 텍스트 변경 로직
+      if (displayText.value == '안녕하세요 희균님!\n인사팀 팀장 리부트 입니다') {
+        displayText.value = '지금부터 근로계약서를\n작성 하겠습니다';
+      } else if (displayText.value == '지금부터 근로계약서를\n작성 하겠습니다') {
+        displayText.value = '근로계약서는\n앞으로 주어질 업무를 결정 합니다';
+      } else if (displayText.value == '근로계약서는\n앞으로 주어질 업무를 결정 합니다') {
+        displayText.value = '신중하게 작성 해주세요!';
+        _isAnimating.value = false;
+        timer.cancel(); // 마지막 텍스트 변경 후 타이머 종료
+      }
+    });
+  }
 }
