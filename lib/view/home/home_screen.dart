@@ -36,22 +36,28 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Obx(
-      () => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTitle(),
-              const HomeBusinessCard(),
-              const StatusCard(),
-              //TODO-[규진] 상황에 따라 있게끔 하는 걸 구현해야함.
-              const WelcomeCard(),
-
-              _buildSchedule(),
-              _buildCalendarSection(context),
-            ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        await viewModel.readWeek();
+        await viewModel.readDailyWork();
+        await viewModel.readUserState();
+      },
+      child: Obx(
+        () => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitle(),
+                const HomeBusinessCard(),
+                const StatusCard(),
+                const WelcomeCard(),
+                _buildSchedule(),
+                _buildCalendarSection(context),
+              ],
+            ),
           ),
         ),
       ),

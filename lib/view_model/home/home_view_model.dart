@@ -58,19 +58,19 @@ class HomeViewModel extends GetxController {
     }
   }
 
-  void readWeek() async {
+  Future<void> readWeek() async {
     _weekState.value = await _homeRepository.readUserWeek();
   }
 
-  void readDailyWork() async {
+  Future<void> readDailyWork() async {
     _dailyWorkState.value = await _homeRepository.readUserDailyWork();
   }
 
-  void readUserState() async {
+  Future<void> readUserState() async {
     _userState.value = await _homeRepository.readUserState();
   }
 
-  void checkUnreadMessage() async {
+  Future<void> checkUnreadMessage() async {
     _showWelcomeCard.value = await SharedPrefsUtil.getHasUnreadMessage();
   }
 }

@@ -36,23 +36,13 @@ class ChattingRoomListScreen extends BaseScreen<ChattingRoomListViewModel> {
         onRefresh: () async {
           await viewModel.fetchChattingRoomList();
         },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: viewModel.chattingRoomList.length, // 채팅 리스트 아이템 개수
-                  itemBuilder: (context, index) {
-                    return _chatListItem(viewModel.chattingRoomList[index]);
-                  },
-                ),
-              ],
-            ),
-          ),
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16.0),
+          itemCount: viewModel.chattingRoomList.length,
+          itemBuilder: (context, index) {
+            return _chatListItem(viewModel.chattingRoomList[index]);
+          },
         ),
       ),
     );
