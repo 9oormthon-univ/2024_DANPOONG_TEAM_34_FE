@@ -35,7 +35,7 @@ Future<void> onSystemInit() async {
   await localNotificationService.initNotification();
 
   // 알림 스케줄 설정
-  await localNotificationService.testNotifications();
+  // await localNotificationService.testNotifications();
 
   // 키 해시 출력
   print(await KakaoSdk.origin);

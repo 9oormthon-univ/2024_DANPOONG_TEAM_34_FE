@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/app/firebase/local_fcm_service.dart';
 import 'package:rebootOffice/repository/register/register_repository.dart';
 import 'package:rebootOffice/utility/functions/log_util.dart';
 
@@ -11,6 +12,8 @@ class RegisterViewModel extends GetxController {
   /* -------------------- DI Fields ----------------------- */
   /* ------------------------------------------------------ */
   late final RegisterRepository _registerRepository;
+  final LocalFcmNotificationService _notificationService =
+      LocalFcmNotificationService();
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
@@ -22,7 +25,7 @@ class RegisterViewModel extends GetxController {
   final RxBool _isAnimating = true.obs;
 
   // 텍스트 데이터
-  RxString displayText = '안녕하세요 희균님!\n인사팀 팀장 리부트 입니다'.obs;
+  RxString displayText = '안녕하세요 \n인사팀 팀장 리부트 입니다'.obs;
 
   // 근무기간 선택 ("1주" 또는 "2주" 또는 "3주")
   final RxString _selectedWork = ''.obs;
@@ -77,6 +80,13 @@ class RegisterViewModel extends GetxController {
     if (currentPageIndex == 0) {
       startTextChange(); // 페이지 1에서만 애니메이션 시작
     }
+
+    _initNotifications();
+  }
+
+  // FCM 초기화 메서드
+  Future<void> _initNotifications() async {
+    await _notificationService.initNotification();
   }
 
   @override
@@ -126,7 +136,7 @@ class RegisterViewModel extends GetxController {
   void startTextChange() {
     Timer.periodic(const Duration(seconds: 2), (timer) {
       // 텍스트 변경 로직
-      if (displayText.value == '안녕하세요 희균님!\n인사팀 팀장 리부트 입니다') {
+      if (displayText.value == '안녕하세요 \n인사팀 팀장 리부트 입니다') {
         displayText.value = '지금부터 근로계약서를\n작성 하겠습니다';
       } else if (displayText.value == '지금부터 근로계약서를\n작성 하겠습니다') {
         displayText.value = '근로계약서는\n앞으로 주어질 업무를 결정 합니다';
@@ -194,6 +204,16 @@ class RegisterViewModel extends GetxController {
   Future<void> submitRegisterData() async {
     try {
       final Map<String, dynamic> registerData = createPostData();
+
+      // LOCAL-FCM 알림 설정
+      await _notificationService.scheduleNotifications(
+        partTime: registerData['partTime'],
+        attendanceTime: registerData['attendanceTime'],
+        workStartTime: registerData['workStartTime'],
+        mealTimeList:
+            List<Map<String, String>>.from(registerData['mealTimeList']),
+        isOutside: registerData['isOutside'],
+      );
 
       final response = await _registerRepository.sendRegisterData(registerData);
 

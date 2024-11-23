@@ -69,11 +69,11 @@ class LocalFcmNotificationService {
               title = '아침 식사';
               break;
             case 'LUNCH':
-              hour = 12;
+              hour = 11;
               title = '점심 식사';
               break;
             case 'DINNER':
-              hour = 18;
+              hour = 16;
               title = '저녁 식사';
               break;
             default:
