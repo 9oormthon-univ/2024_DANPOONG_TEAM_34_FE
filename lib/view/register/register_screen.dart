@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
+import 'package:rebootOffice/utility/functions/on_boarding_util.dart';
+import 'package:rebootOffice/utility/static/app_routes.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
-import 'package:rebootOffice/view/home/home_screen.dart';
 import 'package:rebootOffice/view/register/component/multi_select_box.dart';
 import 'package:rebootOffice/view/register/component/select_box.dart';
-import 'package:rebootOffice/view/register/widget/aniamted_text_widget.dart';
 import 'package:rebootOffice/view/register/widget/scroll_time_picker.dart';
 import 'package:rebootOffice/view_model/register/register_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
@@ -479,7 +479,9 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
                     ? const EdgeInsets.symmetric(vertical: 16)
                     : const EdgeInsets.symmetric(vertical: 2),
                 onPressed: () {
-                  Get.to(() => const HomeScreen());
+                  completeOnboarding();
+                  viewModel.submitRegisterData();
+                  Get.toNamed(Routes.LOGIN);
                 }),
           ),
         ],
