@@ -4,6 +4,44 @@ import 'package:flutter/material.dart';
 
 abstract class FontSystem {
   /* Korean */
+  static const TextStyle MKR24B = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w800,
+    fontFamily: 'Montserrat',
+    color: Colors.black,
+  );
+  static const TextStyle MKR24M = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Montserrat',
+    color: Colors.black,
+  );
+
+  static const TextStyle MKR20B = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w800,
+    fontFamily: 'Montserrat',
+    color: Colors.black,
+  );
+  static const TextStyle MKR20M = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Montserrat',
+    color: Colors.black,
+  );
+  static const TextStyle MKR16B = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w800,
+    fontFamily: 'Montserrat',
+    color: Colors.black,
+  );
+  static const TextStyle MKR16R = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Montserrat',
+    color: Colors.black,
+  );
+
   static const TextStyle MKR14B = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w800,
