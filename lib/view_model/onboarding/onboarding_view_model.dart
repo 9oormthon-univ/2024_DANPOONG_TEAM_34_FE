@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/repository/on_boarding/on_boarding_repository.dart';
+import 'package:rebootOffice/utility/functions/log_util.dart';
 
 import '../../view/onboarding/onboarding_result_screen.dart';
 
@@ -11,7 +13,7 @@ class OnboardingViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* -------------------- DI Fields ----------------------- */
   /* ------------------------------------------------------ */
-
+  late final OnBoardingRepository _onBoardingRepository;
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
@@ -67,7 +69,7 @@ class OnboardingViewModel extends GetxController {
   bool get isMotivateButtonEnabled => _isMotivateButtonEnabled.value;
 
   String? get selectedGender =>
-      _selectedGender.value.isEmpty ? null : _selectedGender.value;
+      _selectedGender.value.isEmpty ? '남성' : _selectedGender.value;
   int get currentPageIndex => _currentPageIndex.value;
 
   set currentPageIndex(int value) => _currentPageIndex.value = value; // Setter
@@ -78,7 +80,7 @@ class OnboardingViewModel extends GetxController {
   void onInit() {
     super.onInit();
     // Dependency Injection
-
+    _onBoardingRepository = Get.find<OnBoardingRepository>();
     // 페이지 컨트롤러 초기화
     _pageController = PageController(viewportFraction: 1);
 
@@ -158,6 +160,54 @@ class OnboardingViewModel extends GetxController {
       }
     } catch (e) {
       print("Error in goToNextStep: $e");
+    }
+  }
+
+  String formatBirthday(String birthday) {
+    if (birthday.length == 8) {
+      return '${birthday.substring(0, 4)}-${birthday.substring(4, 6)}-${birthday.substring(6, 8)}';
+    }
+    return birthday;
+  }
+
+  Future<void> submitUserData() async {
+    try {
+      // 입력값 검증
+      if (textBirthController.text.isEmpty ||
+          textMotivateController.text.isEmpty) {
+        LogUtil.debug('생일 또는 지원동기가 비어있습니다.');
+        return;
+      }
+
+      // API 호출 await 처리
+      final response = await _onBoardingRepository.sendOnBoardingData(
+        textController.text,
+        textEnController.text,
+        selectedGender!,
+        formatBirthday(textBirthController.text),
+        textMotivateController.text,
+      );
+
+      final Map<String, dynamic> userData = {
+        "name": textController.text,
+        "nameEn": textEnController.text,
+        "gender": selectedGender,
+        "birthday": formatBirthday(textBirthController.text),
+        "motivation": textMotivateController.text
+      };
+
+      LogUtil.debug('전송할 데이터: ${userData.toString()}');
+      LogUtil.debug('API 응답: ${response.body}');
+
+      if (response.isOk) {
+        // 성공 처리
+        Get.offAndToNamed('/register');
+      } else {
+        // 실패 처리
+        LogUtil.debug('데이터 전송 실패: ${response.statusText}');
+      }
+    } catch (e) {
+      LogUtil.error('데이터 전송 중 오류 발생: $e');
     }
   }
 }
