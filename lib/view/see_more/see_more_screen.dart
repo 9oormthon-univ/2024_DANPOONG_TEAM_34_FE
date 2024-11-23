@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
+import 'package:rebootOffice/view/home/widget/home_business_card.dart';
 import 'package:rebootOffice/view_model/see_more/see_more_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
-import 'package:rebootOffice/widget/card/business_card.dart';
 import 'package:rebootOffice/widget/modal/custom_two_button_modal.dart';
 
 import '../../repository/auth/auth_repository.dart';
@@ -36,13 +36,7 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const BusinessCard(
-              name: '홍규진',
-              nameEn: 'Hong Kyujin',
-              department: '개발',
-              email: 'hkj0206@dgu.ac.kr',
-              phone: '010-5820-4625',
-            ),
+            const HomeBusinessCard(),
             const SizedBox(height: 20),
             _buildMenuButtons(context),
           ],
