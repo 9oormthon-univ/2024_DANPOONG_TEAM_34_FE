@@ -11,7 +11,7 @@ class StatisticsProviderImpl extends BaseConnect implements StatisticsProvider {
 
     try {
       response = await get(
-        '/analysis/r',
+        '/analysis/users',
       );
     } catch (e) {
       rethrow;
@@ -55,5 +55,23 @@ class StatisticsProviderImpl extends BaseConnect implements StatisticsProvider {
     }
 
     return response.body['data'];
+  }
+
+  @override
+  Future<Map<String, dynamic>> readUserAttendanceList(int index) async {
+    Response response;
+    String numToString = index.toString();
+    try {
+      response = await get(
+        '/analysis/calendar',
+        query: {
+          'groupType': numToString,
+        },
+      );
+      // 응답 데이터를 AttendanceState로 변환
+      return response.body['data'];
+    } catch (e) {
+      rethrow;
+    }
   }
 }
