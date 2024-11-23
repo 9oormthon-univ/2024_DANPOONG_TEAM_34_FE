@@ -30,6 +30,11 @@ class RootScreen extends BaseScreen<RootViewModel> {
           ChattingRoomListScreen(),
           StatisticsScreen(),
           SeeMoreScreen(),
+          // OnboardingScreen(),
+          // OnboardingResultScreen(),
+          // ChattingRoomListScreen(),
+          // StatisticsScreen(),
+//           SeeMoreScreen(),
         ],
       ),
     );
@@ -39,6 +44,6 @@ class RootScreen extends BaseScreen<RootViewModel> {
   bool get extendBodyBehindAppBar => true;
 
   @override
-  Widget buildBottomNavigationBar(BuildContext context) =>
+  Widget? buildBottomNavigationBar(BuildContext context) =>
       const CustomBottomNavigationBar();
 }

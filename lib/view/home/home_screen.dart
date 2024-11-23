@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/utility/static/app_routes.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
@@ -209,6 +210,8 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
         );
       },
       onReportTap: () {
+        Get.toNamed(Routes.STATISTICS_DETAIL);
+
         // 업무일지 보기 로직
       },
     );

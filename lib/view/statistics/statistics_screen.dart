@@ -49,8 +49,9 @@ class StatisticsScreen extends BaseScreen<StatisticsViewModel> {
 
   Widget _buildTitle() {
     //TODO-[규진] 가변 값으로 변환해야함
-    return const Text(
-      '규진 인턴님!\n벌써 출근 8일차네요!',
+
+    return Text(
+      '규진 인턴님!\n벌써 출근 ${viewModel.periodState.progressPeriod} 일차네요!',
       style: FontSystem.KR24B,
     );
   }
