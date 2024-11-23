@@ -12,35 +12,38 @@ import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
 ///
 void showReportBottomSheet(BuildContext context) {
   Get.bottomSheet(
-    ReportBottomSheet(),
+    const ReportBottomSheet(),
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
+    enableDrag: true, // 드래그 가능하도록 설정
   );
 }
 
 class ReportBottomSheet extends BaseWidget<ChattingRoomViewModel> {
-  ReportBottomSheet({super.key});
+  const ReportBottomSheet({super.key});
 
   @override
   Widget buildView(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-          color: ColorSystem.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        padding: const EdgeInsets.all(24),
-        child: GestureDetector(
-          onTap: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-          },
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: ColorSystem.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          padding: const EdgeInsets.all(24),
           child: Obx(
             () => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitle(),
                 _buildImageSection(),
-                viewModel.hasImage ? _buildContentSection() : const SizedBox(),
+                viewModel.hasImage
+                    ? _buildContentSection(context)
+                    : const SizedBox(),
                 _buildSubmitSection(),
               ],
             ),
@@ -76,6 +79,16 @@ class ReportBottomSheet extends BaseWidget<ChattingRoomViewModel> {
       child: Column(
         children: [
           Container(
+            margin: const EdgeInsets.symmetric(vertical: 16), // 위아래 여백 추가
+            padding: viewModel.imageFile == null
+                ? null
+                : const EdgeInsets.all(8), // 내부 여백 추가
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12), // 모서리 둥글게
+              color: viewModel.imageFile == null
+                  ? Colors.transparent
+                  : Colors.grey[100], // 배경색 추가 (선택사항)
+            ),
             child: viewModel.hasImage
                 ? Image.file(
                     viewModel.imageFile!,
@@ -88,18 +101,24 @@ class ReportBottomSheet extends BaseWidget<ChattingRoomViewModel> {
             width: Get.width,
             onPressed: viewModel.checkAndRequestCameraPermission,
             text: viewModel.imageFile == null ? '사진 촬영하기' : '다시 촬영하기',
-            textStyle: FontSystem.KR16B.copyWith(
-              color: ColorSystem.white,
-            ),
+            textStyle: viewModel.imageFile == null
+                ? FontSystem.KR16B.copyWith(
+                    color: ColorSystem.white,
+                  )
+                : FontSystem.KR16B.copyWith(
+                    color: ColorSystem.blue.shade500,
+                  ),
             padding: const EdgeInsets.symmetric(vertical: 18),
-            backgroundColor: ColorSystem.blue.shade500,
+            backgroundColor: viewModel.imageFile == null
+                ? ColorSystem.blue.shade500
+                : ColorSystem.grey.shade200,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildContentSection() {
+  Widget _buildContentSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
