@@ -2,8 +2,10 @@ import "package:firebase_core/firebase_core.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
+import "package:get/get.dart";
 import "package:kakao_flutter_sdk/kakao_flutter_sdk.dart";
 import "package:rebootOffice/app/firebase/local_fcm_service.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 import "app/factory/secure_storage_factory.dart";
 import "app/main_app.dart";
@@ -19,7 +21,12 @@ void main() async {
 Future<void> onSystemInit() async {
   // WidgetsBinding
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // Firebase 초기화 및 FCM 토큰 받기를 스플래시 스크린이 띄워졌을 떄 진행합니다.
+
+  final prefs = await SharedPreferences.getInstance();
+  Get.put<SharedPreferences>(prefs);
+
+  // await prefs.remove('hasCompletedOnboarding');
+
   // Environment
   await dotenv.load(fileName: "assets/config/.env");
   KakaoSdk.init(nativeAppKey: "${dotenv.env['KAKAO_APP_KEY']}");
