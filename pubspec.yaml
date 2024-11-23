@@ -90,7 +90,6 @@ dependencies:
   # Flip Card
   flutter_flip_card: ^0.0.6
 
-
 dev_dependencies:
   # Default
   flutter_test:

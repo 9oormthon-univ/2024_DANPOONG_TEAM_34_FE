@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
@@ -9,7 +8,6 @@ import 'package:rebootOffice/view/home/home_screen.dart';
 import 'package:rebootOffice/view/register/component/multi_select_box.dart';
 import 'package:rebootOffice/view/register/component/select_box.dart';
 import 'package:rebootOffice/view/register/widget/aniamted_text_widget.dart';
-import 'package:rebootOffice/view/register/widget/scroll_time_picker.dart';
 import 'package:rebootOffice/view_model/register/register_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
 import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';

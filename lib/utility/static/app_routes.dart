@@ -6,4 +6,5 @@ abstract class Routes {
   static const String LOGIN = "/login";
   static const String ROOT = '/';
   static const String CHATTING_ROOM = "/chatting_room/:chattingRoomId";
+  static const String STATISTICS_DETAIL = "/statistics_detail";
 }

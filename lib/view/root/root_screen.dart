@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view/chatting_list/chatting_room_list_screen.dart';
 import 'package:rebootOffice/view/home/home_screen.dart';
-import 'package:rebootOffice/view/onboarding/onboarding_result_screen.dart';
-import 'package:rebootOffice/view/onboarding/onboarding_screen.dart';
 import 'package:rebootOffice/view/root/widget/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:rebootOffice/view/see_more/see_more_screen.dart';
 import 'package:rebootOffice/view/statistics/statistics_screen.dart';
@@ -28,14 +26,14 @@ class RootScreen extends BaseScreen<RootViewModel> {
       () => IndexedStack(
         index: viewModel.selectedIndex,
         children: const [
-//           HomeScreen(),
-          // ChattingListScreen(),
-          // StatisticsScreen(),
-          // SeeMoreScreen(),
-          OnboardingScreen(),
-          OnboardingResultScreen(),
+          HomeScreen(),
           ChattingRoomListScreen(),
           StatisticsScreen(),
+          SeeMoreScreen(),
+          // OnboardingScreen(),
+          // OnboardingResultScreen(),
+          // ChattingRoomListScreen(),
+          // StatisticsScreen(),
 //           SeeMoreScreen(),
         ],
       ),
@@ -47,6 +45,5 @@ class RootScreen extends BaseScreen<RootViewModel> {
 
   @override
   Widget? buildBottomNavigationBar(BuildContext context) =>
-      // const CustomBottomNavigationBar();
-      null;
+      const CustomBottomNavigationBar();
 }

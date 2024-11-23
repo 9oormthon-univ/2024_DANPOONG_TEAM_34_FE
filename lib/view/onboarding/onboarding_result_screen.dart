@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/utility/functions/on_boarding_util.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view/onboarding/onboarding_card_screen.dart';
+import 'package:rebootOffice/view/root/root_screen.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
 import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
@@ -82,6 +84,8 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           onPressed: () {
             // TO DO : Register로 이동
+            OnboardingService.setOnboardingComplete();
+            Get.offAll(() => const RootScreen());
           }),
     );
   }

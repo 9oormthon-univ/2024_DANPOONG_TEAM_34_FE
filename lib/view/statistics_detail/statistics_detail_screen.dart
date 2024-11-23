@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/statistics/task_state.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view_model/statistics_detail/statistic_detail_view_model.dart';
+
 import '../../utility/system/color_system.dart';
 import '../../utility/system/font_system.dart';
-import '../../widget/appbar/default_appbar.dart';
 import '../../widget/appbar/default_back_appbar.dart';
 
-class StatisticsDetailScreen extends BaseScreen<StatisticDetailViewModel> {
+class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
   const StatisticsDetailScreen({super.key});
 
   @override
@@ -76,14 +75,14 @@ class StatisticsDetailScreen extends BaseScreen<StatisticDetailViewModel> {
                 width: 12,
               ),
               Text(
-                task.title,
+                task.chatType,
                 style: FontSystem.KR20B,
               ),
               const SizedBox(
                 width: 8,
               ),
               Text(
-                task.time,
+                task.createdAt,
                 style: FontSystem.KR16R.copyWith(
                   color: ColorSystem.grey.shade600,
                 ),
@@ -113,7 +112,7 @@ class StatisticsDetailScreen extends BaseScreen<StatisticDetailViewModel> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Image.asset(
+                  child: Image.network(
                     task.imageUrl,
                     width: 229,
                     height: 309,
@@ -124,7 +123,7 @@ class StatisticsDetailScreen extends BaseScreen<StatisticDetailViewModel> {
                 SizedBox(
                   width: 229,
                   child: Text(
-                    task.description,
+                    task.content,
                     style: FontSystem.KR16B,
                   ),
                 ),

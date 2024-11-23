@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/statistics/period_state.dart';
+import 'package:rebootOffice/model/statistics/task_state.dart';
 import 'package:rebootOffice/model/statistics/user_status_state.dart';
 import 'package:rebootOffice/provider/statistics/statistics_provider.dart';
 import 'package:rebootOffice/repository/statistics/statistics_repository.dart';
@@ -41,5 +42,19 @@ class StatisticsRepositoryImpl extends GetxService
     }
 
     return PeriodState.fromJson(data);
+  }
+
+  @override
+  Future<List<TaskState>> readUserTaskList() async {
+    List<dynamic> data;
+
+    try {
+      data = await _statisticsProvider.readUserTaskList();
+    } catch (e) {
+      LogUtil.error("Task 설정 실패 ,초기값으로 설정");
+      return TaskState.initial();
+    }
+
+    return data.map((e) => TaskState.fromJson(e)).toList();
   }
 }
