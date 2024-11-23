@@ -41,12 +41,12 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
         children: [
           _buildTitle(),
           const SizedBox(height: 20),
-          const BusinessCard(
-            name: '이희균',
-            nameEn: 'Heekyunlee',
-            department: '수습',
-            email: 'nuykeeh@gmail.com',
-            phone: '리부트오피스이메일',
+          BusinessCard(
+            name: viewModel.userName,
+            nameEn: viewModel.userNameEn,
+            department: '인턴',
+            email: 'rebootOffice@gmail.com',
+            phone: '010-1234-5678',
             initiallyExpanded: true,
           ),
           const SizedBox(height: 8),

@@ -71,6 +71,9 @@ class OnboardingViewModel extends GetxController {
   String? get selectedGender =>
       _selectedGender.value.isEmpty ? '남성' : _selectedGender.value;
   int get currentPageIndex => _currentPageIndex.value;
+  // 이름 getter 추가
+  String get userName => textController.text;
+  String get userNameEn => textEnController.text;
 
   set currentPageIndex(int value) => _currentPageIndex.value = value; // Setter
 

@@ -1,8 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'dart:math' as math;
+
 import '../../utility/system/color_system.dart';
 import '../../view_model/onboarding/onboarding_view_model.dart';
 import '../../widget/appbar/default_white_back_appbar.dart';
@@ -44,12 +46,12 @@ class OnboardingCardScreen extends BaseScreen<OnboardingViewModel> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FlipCard(
-                  frontWidget: const BusinessCardBig(
-                      name: '이희균',
-                      nameEn: 'Heekyunlee',
-                      department: '슈숩',
-                      email: 'nuykeeh@gmail.com',
-                      phone: '리부트오피스이메일'),
+                  frontWidget: BusinessCardBig(
+                      name: viewModel.userName,
+                      nameEn: viewModel.userNameEn,
+                      department: '인턴',
+                      email: 'rebootOffice@gmail.com',
+                      phone: '010-1234-5678'),
                   backWidget: _buildBack(),
                   controller: viewModel.flipCardController,
                   rotateSide: RotateSide.right,
