@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/binding/root_binding.dart';
 import 'package:rebootOffice/middleware/login_middleware.dart';
@@ -30,12 +29,7 @@ List<GetPage> appPages = [
   GetPage(
     name: Routes.CHATTING_ROOM,
     page: () {
-      final roomId = Get.arguments as int;
-      if (roomId == null) {
-        Get.back(); // 또는 에러 처리
-        return const SizedBox.shrink();
-      }
-      return ChattingRoomScreen(roomId);
+      return ChattingRoomScreen();
     },
     binding: ChattingRoomBinding(),
   ),
@@ -44,7 +38,7 @@ List<GetPage> appPages = [
     name: Routes.LOGIN,
     page: () => const LoginScreen(),
     binding: LoginBinding(),
-    middlewares: [
+    middlewares: const [
       // LoginMiddleware(),
     ],
   ),
