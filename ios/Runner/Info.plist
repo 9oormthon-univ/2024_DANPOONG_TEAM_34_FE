@@ -41,7 +41,7 @@
 			<string>kakaoSecondURL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao2a83531317275d0de2e8db20013e9f4d://oauth</string>
+				<string>kakao2a83531317275d0de2e8db20013e9f4d</string>
 			</array>
 		</dict>
 	</array>
