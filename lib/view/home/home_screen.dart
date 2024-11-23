@@ -47,9 +47,8 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
               const HomeBusinessCard(),
               const StatusCard(),
               //TODO-[규진] 상황에 따라 있게끔 하는 걸 구현해야함.
-              viewModel.showWelcomeCard
-                  ? const WelcomeCard()
-                  : const SizedBox(height: 0),
+              const WelcomeCard(),
+
               _buildSchedule(),
               _buildCalendarSection(context),
             ],

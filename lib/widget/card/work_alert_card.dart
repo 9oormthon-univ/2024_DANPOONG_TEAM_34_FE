@@ -41,7 +41,7 @@ class WelcomeCard extends BaseWidget<ChattingRoomListViewModel> {
             ),
             const SizedBox(height: 24),
             Text(
-              '희균님 확인하지 않은 메시지가 있어요!',
+              '확인하지 않은 메시지가 있어요!',
               style: FontSystem.KR16EB.copyWith(color: ColorSystem.black),
               textAlign: TextAlign.center,
             ),
