@@ -36,4 +36,19 @@ class HomeProviderImpl extends BaseConnect implements HomeProvider {
 
     return response.body['data'];
   }
+
+  @override
+  Future<Map<String, dynamic>> readUserState() async {
+    Response response;
+
+    try {
+      response = await get(
+        '/users',
+      );
+    } catch (e) {
+      rethrow;
+    }
+
+    return response.body['data'];
+  }
 }
