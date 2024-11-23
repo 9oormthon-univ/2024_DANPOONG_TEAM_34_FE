@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/root/custom_bottom_navigation_item_state.dart';
-import 'package:rebootOffice/model/root/user_state.dart';
 // import 'package:rebootOffice/repository/user/user_repository.dart';
 
 class RootViewModel extends GetxController {
@@ -18,7 +17,6 @@ class RootViewModel extends GetxController {
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
   late final RxInt _selectedIndex;
-  late final Rx<UserState> _userState;
 
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
@@ -26,7 +24,6 @@ class RootViewModel extends GetxController {
   late final List<CustomBottomNavigationItemState> bottomNavItems;
 
   int get selectedIndex => _selectedIndex.value;
-  UserState get userState => _userState.value;
 
   @override
   void onInit() {
@@ -36,8 +33,7 @@ class RootViewModel extends GetxController {
     // _userRepository = Get.find<UserRepository>();
 
     // Initialize private fields
-    _selectedIndex = 1.obs;
-    _userState = UserState.initial().obs;
+    _selectedIndex = 0.obs;
 
     bottomNavItems = [
       CustomBottomNavigationItemState(
@@ -55,47 +51,9 @@ class RootViewModel extends GetxController {
     ];
   }
 
-  @override
-  void onReady() async {
-    super.onReady();
 
-    // await _userRepository.readUserState().then((value) {
-    //   _userState.value = value;
-    // });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   void fetchIndex(int index) {
     _selectedIndex.value = index;
-  }
-
-  void updateEnvironmentalTemperature() {
-    // 0.1 증가시키기
-    _userState.value = _userState.value.copyWith(
-      environmentalTemperature:
-          (double.parse(_userState.value.environmentalTemperature) + 0.1)
-              .toString(),
-    );
-  }
-
-  void onIsAlarmSwitch() async {
-    _userState.value = _userState.value
-        .copyWith(isActiveNotification: !_userState.value.isActiveNotification);
-
-    // await _userRepository
-    //     .updateUserNotificationActive(_userState.value.isActiveNotification);
-  }
-
-  void changeAlarmTime(int hour, int minute) async {
-    _userState.value = _userState.value.copyWith(
-      notificationHour: hour,
-      notificationMinute: minute,
-    );
-
-    // await _userRepository.updateUserNotificationTime(hour, minute);
   }
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/utility/functions/level_util.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_widget.dart';
 import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 
 class StatusCard extends BaseWidget<StatisticsViewModel> {
+  const StatusCard({super.key});
+
   @override
   Widget buildView(BuildContext context) {
     return Obx(
@@ -27,7 +30,7 @@ class StatusCard extends BaseWidget<StatisticsViewModel> {
               Text(
                 viewModel.isTouched
                     ? '목표까지 앞으로 ${viewModel.periodState.remainPeriod} 일'
-                    : '일상회복팀 | ${_getEmployeeStatus()}',
+                    : '일상회복팀 | ${getEmployeeStatus(viewModel.periodState.contractPeriod, viewModel.periodState.remainPeriod, viewModel.periodState.progressPeriod)}',
                 style: FontSystem.KR14B.copyWith(color: ColorSystem.white),
               ),
               const Spacer(),
@@ -38,20 +41,6 @@ class StatusCard extends BaseWidget<StatisticsViewModel> {
         ),
       ),
     );
-  }
-
-  String _getEmployeeStatus() {
-    final totalPeriod = viewModel.periodState.contractPeriod;
-    final remainPeriod = viewModel.periodState.remainPeriod;
-    final progressPeriod = viewModel.periodState.progressPeriod;
-
-    if (remainPeriod <= 0) {
-      return '정식사원';
-    } else if (progressPeriod >= (totalPeriod / 2) - 1) {
-      return '수습';
-    } else {
-      return '인턴';
-    }
   }
 
   Widget _buildLevels() {
@@ -72,7 +61,7 @@ class StatusCard extends BaseWidget<StatisticsViewModel> {
         ),
         const Spacer(),
         Text(
-          viewModel.isTouched ? '${totalDays}일' : '정식사원',
+          viewModel.isTouched ? '$totalDays일' : '정식사원',
           style: FontSystem.KR12B.copyWith(color: ColorSystem.white),
         ),
       ],

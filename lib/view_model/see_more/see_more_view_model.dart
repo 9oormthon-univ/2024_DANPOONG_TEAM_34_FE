@@ -31,10 +31,6 @@ class SeeMoreViewModel extends GetxController {
     _isLoadingWhenOpenDialog = false.obs;
   }
 
-  @override
-  void onReady() async {
-    super.onReady();
-  }
 
   void fetchQuizDetail(int index) async {
     _isLoadingWhenOpenDialog.value = true;
