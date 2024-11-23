@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/utility/functions/day_util.dart';
-import 'package:rebootOffice/utility/functions/log_util.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_widget.dart';
@@ -233,7 +232,6 @@ class CalendarGrid extends BaseWidget<StatisticsViewModel> {
 
     // 날짜 차이 계산
     final difference = endDate.difference(startDate).inDays;
-    LogUtil.debug(difference);
     // 날짜 범위가 너무 크면 빈 배열 반환
     if (difference > 31 || difference < 0) {
       return [];
