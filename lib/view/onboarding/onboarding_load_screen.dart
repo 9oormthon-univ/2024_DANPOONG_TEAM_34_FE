@@ -32,24 +32,26 @@ class OnboardingLoadScreen extends BaseScreen<OnboardingViewModel> {
 
   Widget _buildLoadingText() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 48),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Obx(
-        () => Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildStepText(viewModel.steps[0], Icons.circle,
-                viewModel.steps[0] == viewModel.updatedSteps[0]),
-            const SizedBox(
-              height: 36,
-            ),
-            _buildStepText(viewModel.steps[1], Icons.circle,
-                viewModel.steps[1] == viewModel.updatedSteps[1]),
-            const SizedBox(
-              height: 36,
-            ),
-            _buildStepText(viewModel.steps[2], Icons.circle,
-                viewModel.steps[2] == viewModel.updatedSteps[2]),
-          ],
+        () => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildStepText(viewModel.steps[0], Icons.circle,
+                  viewModel.steps[0] == viewModel.updatedSteps[0]),
+              const SizedBox(
+                height: 36,
+              ),
+              _buildStepText(viewModel.steps[1], Icons.circle,
+                  viewModel.steps[1] == viewModel.updatedSteps[1]),
+              const SizedBox(
+                height: 36,
+              ),
+              _buildStepText(viewModel.steps[2], Icons.circle,
+                  viewModel.steps[2] == viewModel.updatedSteps[2]),
+            ],
+          ),
         ),
       ),
     );

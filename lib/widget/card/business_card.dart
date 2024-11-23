@@ -10,6 +10,7 @@ class BusinessCard extends StatefulWidget {
   final String department;
   final String email;
   final String phone;
+  final bool initiallyExpanded;
 
   const BusinessCard({
     super.key,
@@ -18,6 +19,7 @@ class BusinessCard extends StatefulWidget {
     required this.department,
     required this.email,
     required this.phone,
+    this.initiallyExpanded = false,
   });
 
   @override
@@ -27,6 +29,14 @@ class BusinessCard extends StatefulWidget {
 class _BusinessCardState extends State<BusinessCard> {
   bool isExpanded = false;
   bool showBottomInfo = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기 확장 상태를 위젯 속성으로부터 설정
+    isExpanded = widget.initiallyExpanded;
+    showBottomInfo = widget.initiallyExpanded;
+  }
 
   void _toggleCard() {
     if (isExpanded) {

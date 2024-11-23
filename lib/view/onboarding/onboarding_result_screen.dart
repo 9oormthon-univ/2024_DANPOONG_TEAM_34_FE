@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/binding/root_binding.dart';
 import 'package:rebootOffice/utility/functions/on_boarding_util.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view/onboarding/onboarding_card_screen.dart';
+import 'package:rebootOffice/view/register/register_screen.dart';
 import 'package:rebootOffice/view/root/root_screen.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
@@ -41,13 +43,15 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitle(),
-          const SizedBox(height: 28),
+          const SizedBox(height: 20),
           const BusinessCard(
-              name: '이희균',
-              nameEn: 'Heekyunlee',
-              department: '슈숩',
-              email: 'nuykeeh@gmail.com',
-              phone: '리부트오피스이메일'),
+            name: '이희균',
+            nameEn: 'Heekyunlee',
+            department: '수습',
+            email: 'nuykeeh@gmail.com',
+            phone: '리부트오피스이메일',
+            initiallyExpanded: true,
+          ),
           const SizedBox(height: 8),
           _buildNavigateToCard(),
           const Spacer(),
@@ -85,7 +89,7 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
           onPressed: () {
             // TO DO : Register로 이동
             OnboardingService.setOnboardingComplete();
-            Get.offAll(() => const RootScreen());
+            Get.offAll(() => const RegisterScreen());
           }),
     );
   }

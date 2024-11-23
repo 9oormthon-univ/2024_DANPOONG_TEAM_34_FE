@@ -19,20 +19,15 @@ class OnboardingViewModel extends GetxController {
 
   late final FlipCardController _flipCardController;
 
-  // 사용자의 이름
-  final RxString _name = ''.obs;
-  // 현재 입력된 이름이 유효한지 상태 관리
-  final RxBool _isNameValid = false.obs;
+  late final TextEditingController _textController;
+  late final TextEditingController _textEnController;
+  late final RxBool _isNameButtonEnabled = false.obs;
 
-  // 사용자의 생년월일
-  final RxString _birth = ''.obs;
-  // 현재 입력된 생년월일 유효한지 상태 관리
-  final RxBool _isBirthValid = false.obs;
+  late final TextEditingController _textBirthController;
+  late final RxBool _isBirthButtonEnabled = false.obs;
 
-  // 사용자의 자기소개
-  final RxString _motivate = ''.obs;
-  // 현재 입력된 자기소개가 유효한지 상태 관리
-  final RxBool _isMotivateValid = false.obs;
+  late final TextEditingController _textMotivateController;
+  late final RxBool _isMotivateButtonEnabled = false.obs;
 
   // 현재 선택된 성별 (null: 선택 안됨, "남성" 또는 "여성")
   final RxString _selectedGender = ''.obs;
@@ -61,12 +56,16 @@ class OnboardingViewModel extends GetxController {
   PageController get pageController => _pageController;
   FlipCardController get flipCardController => _flipCardController;
 
-  String get name => _name.value;
-  bool get isNameValid => _isNameValid.value;
-  String get birth => _birth.value;
-  bool get isBirthValid => _isBirthValid.value;
-  String get motivate => _motivate.value;
-  bool get isMotivateValid => _isMotivateValid.value;
+  TextEditingController get textController => _textController;
+  TextEditingController get textEnController => _textEnController;
+  bool get isNameButtonEnabled => _isNameButtonEnabled.value;
+
+  TextEditingController get textBirthController => _textBirthController;
+  bool get isBirthButtonEnabled => _isBirthButtonEnabled.value;
+
+  TextEditingController get textMotivateController => _textMotivateController;
+  bool get isMotivateButtonEnabled => _isMotivateButtonEnabled.value;
+
   String? get selectedGender =>
       _selectedGender.value.isEmpty ? null : _selectedGender.value;
   int get currentPageIndex => _currentPageIndex.value;
@@ -83,6 +82,30 @@ class OnboardingViewModel extends GetxController {
     // 페이지 컨트롤러 초기화
     _pageController = PageController(viewportFraction: 1);
 
+    // TextEditingController 초기화
+    _textController = TextEditingController();
+    _textEnController = TextEditingController();
+    _textBirthController = TextEditingController();
+    _textMotivateController = TextEditingController();
+
+    textController.addListener(() {
+      // 이름 필드가 비어있지 않으면 버튼 활성화
+      _isNameButtonEnabled.value =
+          textController.text.isNotEmpty || textEnController.text.isNotEmpty;
+    });
+
+    textEnController.addListener(() {
+      // 영문 이름 필드가 비어있지 않으면 버튼 활성화
+      _isNameButtonEnabled.value =
+          textController.text.isNotEmpty || textEnController.text.isNotEmpty;
+    });
+    textBirthController.addListener(() {
+      _isBirthButtonEnabled.value = textBirthController.text.isNotEmpty;
+    });
+    textMotivateController.addListener(() {
+      _isMotivateButtonEnabled.value = textMotivateController.text.isNotEmpty;
+    });
+
     // flipcard 컨트롤러 초기화
     _flipCardController = FlipCardController();
   }
@@ -90,25 +113,14 @@ class OnboardingViewModel extends GetxController {
   @override
   void onClose() {
     _pageController.dispose();
+    _textController.dispose();
+    _textBirthController.dispose();
+    _textMotivateController.dispose();
     super.onClose();
   }
 
-  // 이름 업데이트 및 유효성 검사
-  void updateName(String value) {
-    _name.value = value;
-    _isNameValid.value = value.trim().isNotEmpty; // 유효성 검사 (비어있는지 확인)
-  }
-
-  // 생년월일 업데이트 및 유효성 검사
-  void updateBirth(String value) {
-    _birth.value = value;
-    _isBirthValid.value = value.trim().isNotEmpty; // 유효성 검사 (비어있는지 확인)
-  }
-
-  // 자기소개 업데이트 및 유효성 검사
-  void updateMotivate(String value) {
-    _motivate.value = value;
-    _isMotivateValid.value = value.trim().isNotEmpty; // 유효성 검사 (비어있는지 확인)
+  void onTextChanged(String text) {
+    _isNameButtonEnabled.value = text.isNotEmpty;
   }
 
   void selectGender(String gender) {
@@ -118,11 +130,11 @@ class OnboardingViewModel extends GetxController {
   // 로딩스크린
   void startAnimation() {
     for (int i = 0; i < steps.length; i++) {
-      Future.delayed(Duration(seconds: 2 * (i + 1)), () {
+      Future.delayed(Duration(seconds: 1 * (i + 1)), () {
         steps[i] = updatedSteps[i]; // i번째 텍스트를 업데이트
 
         if (i == steps.length - 1) {
-          Future.delayed(const Duration(seconds: 2), () {
+          Future.delayed(const Duration(seconds: 1), () {
             Get.to(() => const OnboardingResultScreen());
           });
         }

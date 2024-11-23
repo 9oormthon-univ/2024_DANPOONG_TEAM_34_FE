@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rebootOffice/utility/system/color_system.dart';
 
 class GenderSelection extends StatelessWidget {
   const GenderSelection({
@@ -33,8 +34,8 @@ class GenderSelection extends StatelessWidget {
                 selector,
                 style: TextStyle(
                   color: isSelected
-                      ? const Color(0xFF2B8FFF)
-                      : const Color(0xFF999999),
+                      ? ColorSystem.black
+                      : ColorSystem.grey.shade600,
                   fontSize: 16,
                 ),
               ),
