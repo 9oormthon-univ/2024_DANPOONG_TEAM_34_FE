@@ -20,33 +20,38 @@ class ChattingRoomListScreen extends BaseScreen<ChattingRoomListViewModel> {
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) {
     return const PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: DefaultSvgAppBar(
-          svgPath: 'assets/icons/appbar/header-logo.svg',
-          height: 15,
-          showBackButton: false,
-        ));
+      preferredSize: Size.fromHeight(60),
+      child: DefaultSvgAppBar(
+        svgPath: 'assets/icons/appbar/header-logo.svg',
+        height: 15,
+        showBackButton: false,
+      ),
+    );
   }
 
   @override
   Widget buildBody(BuildContext context) {
-    viewModel.fetchChattingRoomList();
     return Obx(
-      () => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: viewModel.chattingRoomList.length, // 채팅 리스트 아이템 개수
-                itemBuilder: (context, index) {
-                  return _chatListItem(viewModel.chattingRoomList[index]);
-                },
-              ),
-            ],
+      () => RefreshIndicator(
+        onRefresh: () async {
+          await viewModel.fetchChattingRoomList();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: viewModel.chattingRoomList.length, // 채팅 리스트 아이템 개수
+                  itemBuilder: (context, index) {
+                    return _chatListItem(viewModel.chattingRoomList[index]);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -55,17 +60,20 @@ class ChattingRoomListScreen extends BaseScreen<ChattingRoomListViewModel> {
 }
 
 Widget _chatListItem(ChattingRoomState chattingRoom) {
-  navigateToChatScreen(int chatRoomId) {
+  navigateToChatScreen(int chatRoomId, String eChatType) {
     Get.toNamed(
       Routes.CHATTING_ROOM,
-      arguments: chatRoomId,
+      arguments: {
+        'chatRoomId': chatRoomId,
+        'eChatType': eChatType,
+      },
     );
   }
 
   return GestureDetector(
     onTap: () {
       //TODO-[규진] 채팅방으로 이동 동적으로 바꿔야함
-      navigateToChatScreen(chattingRoom.chatRoomId);
+      navigateToChatScreen(chattingRoom.chatRoomId, chattingRoom.eChatType);
     },
     child: Container(
       padding: const EdgeInsets.symmetric(vertical: 12),

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
@@ -8,8 +7,6 @@ import 'package:rebootOffice/provider/chatting/chatting_provider.dart';
 import 'package:rebootOffice/utility/functions/log_util.dart';
 
 class ChattingProvierImpl extends BaseConnect implements ChattingProvider {
-  //TODO-[규진] 가변값으로 연결 필요
-
   @override
   Future<List<dynamic>> readChattingRoomList() async {
     Response response;
@@ -73,26 +70,19 @@ class ChattingProvierImpl extends BaseConnect implements ChattingProvider {
   @override
   Future<Response<dynamic>> sendChatMessage(
       int chatId, String question, String eChatType, File? imageFile) async {
-    final Map<String, dynamic> requestData = {
-      'question': question,
-      'eChatType': eChatType,
-    };
-
     final formData = FormData(
       {
-        'createChatRequestDto': jsonEncode(requestData), // 직접 문자열로 전달
-        if (imageFile != null)
-          'image': MultipartFile(
-            imageFile,
-            filename: '${DateTime.now().millisecondsSinceEpoch}.jpg',
-            contentType: 'image/jpg',
-          ),
+        'image': MultipartFile(
+          imageFile,
+          filename: '${DateTime.now().millisecondsSinceEpoch}.jpg',
+          contentType: 'image/jpg',
+        ),
       },
     );
 
     try {
       return await post(
-        '/chats',
+        '/chats?eChatType=$eChatType&question=$question',
         formData,
         contentType: 'multipart/form-data', // Content-Type 명시적 설정
       );

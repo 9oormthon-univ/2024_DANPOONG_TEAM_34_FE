@@ -21,7 +21,7 @@ class WeekCalendarCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = weekState.currentTime;
-    final weekNumber = ((now.day - 1) ~/ 7) + 0;
+    final weekNumber = ((now.day - 1) ~/ 7);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),

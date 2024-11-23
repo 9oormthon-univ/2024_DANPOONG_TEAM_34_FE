@@ -22,9 +22,9 @@ class WeekState {
 
   factory WeekState.fromJson(Map<String, dynamic> json) {
     return WeekState(
-      workStartTime: json['workStartTime'],
-      workEndTime: json['workEndTime'],
-      currentTime: json['currentTime'],
+      workStartTime: DateTime.parse(json['workStartTime']),
+      workEndTime: DateTime.parse(json['workEndTime']),
+      currentTime: DateTime.parse(json['currentTime']),
     );
   }
 }

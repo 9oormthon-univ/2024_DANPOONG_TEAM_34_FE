@@ -8,9 +8,9 @@ class ReportButton extends StatelessWidget {
   final VoidCallback onTap;
 
   const ReportButton({
-    Key? key,
+    super.key,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

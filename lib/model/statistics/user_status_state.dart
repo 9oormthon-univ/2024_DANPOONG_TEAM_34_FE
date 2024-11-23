@@ -23,9 +23,9 @@ class UserStatusState {
 
   Map<String, dynamic> toJson() {
     return {
-      'workStartTime': this.workStartTime,
-      'workEndTime': this.workEndTime,
-      'currentTime': this.currentTime,
+      'workStartTime': workStartTime,
+      'workEndTime': workEndTime,
+      'currentTime': currentTime,
     };
   }
 

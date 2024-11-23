@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/utility/functions/enumToKorean.dart';
 import 'package:rebootOffice/utility/static/app_routes.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
+import 'package:rebootOffice/view/home/widget/home_business_card.dart';
 import 'package:rebootOffice/view/home/widget/week_calendar_card.dart';
 import 'package:rebootOffice/view/home/widget/week_selector_dialog.dart';
 import 'package:rebootOffice/view_model/home/home_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_svg_appbar.dart';
-import 'package:rebootOffice/widget/card/business_card.dart';
 import 'package:rebootOffice/widget/card/status_card.dart';
+import 'package:rebootOffice/widget/card/work_alert_card.dart';
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -42,16 +44,12 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildTitle(),
-              const BusinessCard(
-                name: '홍규진',
-                nameEn: 'Hong Kyujin',
-                department: '개발',
-                email: 'hkj0206@dgu.ac.kr',
-                phone: '010-5820-4625',
-              ),
-              StatusCard(),
+              const HomeBusinessCard(),
+              const StatusCard(),
               //TODO-[규진] 상황에 따라 있게끔 하는 걸 구현해야함.
-              // WelcomeCard(),
+              viewModel.showWelcomeCard
+                  ? const WelcomeCard()
+                  : const SizedBox(height: 0),
               _buildSchedule(),
               _buildCalendarSection(context),
             ],
@@ -62,10 +60,10 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
   }
 
   Widget _buildTitle() {
-    return const Column(
+    return Column(
       children: [
         Text(
-          '규진님 잘 해내고 있어요!\n 조금씩 나아가 보아요',
+          '${viewModel.userState.name}님 잘 해내고 있어요!\n 조금씩 나아가 보아요',
           style: FontSystem.KR24B,
         ),
         SizedBox(height: 16),
@@ -94,6 +92,8 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
               itemCount: viewModel.dailyWorkState.length,
               itemBuilder: (context, index) {
                 final work = viewModel.dailyWorkState[index];
+                //startTime 이 07:00 일 때, 현재 시간이랑 비교해서 색 칠해주기
+
                 return _buildScheduleItem(
                   startTime: work.startTime, // DateTime 객체 직접 전달
                   endTime: work.endTime, // DateTime 객체 직접 전달
@@ -107,23 +107,6 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
         ),
       ],
     );
-  }
-
-  String enumToKorean(String value) {
-    switch (value) {
-      case 'FOLD':
-        return '기상';
-      case 'MORNING':
-        return '아침식사';
-      case 'LUNCH':
-        return '점심식사';
-      case 'DINNER':
-        return '저녁식사';
-      case 'LEAVE':
-        return '취침';
-      default:
-        return value;
-    }
   }
 
   Widget _buildScheduleItem({
@@ -211,7 +194,6 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
       },
       onReportTap: () {
         Get.toNamed(Routes.STATISTICS_DETAIL);
-
         // 업무일지 보기 로직
       },
     );

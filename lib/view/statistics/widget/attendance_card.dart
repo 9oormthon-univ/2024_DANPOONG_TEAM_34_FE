@@ -17,57 +17,124 @@ class AttendanceCard extends BaseWidget<StatisticsViewModel> {
         color: ColorSystem.white,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Obx(
-        () => Column(
+      child: Column(
+        children: [
+          _buildAttendanceStatus(),
+          _buildTopBar(),
+          _buildAttendanceGrid(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAttendanceStatus() {
+    return Obx(
+      () => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildTopBar(),
-            _buildAttendanceStamps(),
+            _buildStatusItem(
+              'assets/icons/common/work_circle_check.svg',
+              viewModel.attendanceState[0].success,
+              Colors.green,
+            ),
+            const SizedBox(width: 12),
+            _buildStatusItem(
+              'assets/icons/common/work_circle_warning.svg',
+              viewModel.attendanceState[0].unclear,
+              Colors.orange,
+            ),
+            const SizedBox(width: 12),
+            _buildStatusItem(
+              'assets/icons/common/work_circle_dangerous.svg',
+              viewModel.attendanceState[0].fail,
+              Colors.red,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTopBar() {
+  Widget _buildStatusItem(String svgPath, int count, Color color) {
     return Row(
       children: [
-        _buildTab('출근/퇴근', 0),
-        _buildTab('식사 업무', 1),
-        _buildTab('외근 업무', 2),
+        SvgPicture.asset(
+          svgPath,
+          width: 20,
+          height: 20,
+          color: color,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          '$count개',
+          style: FontSystem.KR12M.copyWith(
+            color: color,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildTab(String title, int index) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => viewModel.setSelectedIndex(index),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: viewModel.selectedIndex == index
-                ? ColorSystem.blue.shade500
-                : ColorSystem.grey.shade200,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+  Widget _buildTopBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border(
+          bottom: BorderSide(
+            color: ColorSystem.grey.shade200,
+            width: 1,
           ),
-          child: Text(
-            title,
-            style: FontSystem.KR14B.copyWith(
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _buildTab('출근/퇴근', 0),
+              _buildTab('식사 업무', 1),
+              _buildTab('외근 업무', 2),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTab(String title, int index) {
+    return Obx(
+      () => Expanded(
+        child: GestureDetector(
+          onTap: () => viewModel.setSelectedIndex(index),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
               color: viewModel.selectedIndex == index
-                  ? ColorSystem.white
-                  : ColorSystem.grey.shade600,
+                  ? ColorSystem.blue.shade500
+                  : ColorSystem.grey.shade200,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8), topRight: Radius.circular(8)),
             ),
-            textAlign: TextAlign.center,
+            child: Text(
+              title,
+              style: FontSystem.KR14B.copyWith(
+                color: viewModel.selectedIndex == index
+                    ? ColorSystem.white
+                    : ColorSystem.grey.shade600,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildAttendanceStamps() {
+  Widget _buildAttendanceGrid() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: ColorSystem.blue.shade500,
         borderRadius: const BorderRadius.only(
@@ -75,74 +142,125 @@ class AttendanceCard extends BaseWidget<StatisticsViewModel> {
           bottomRight: Radius.circular(12),
         ),
       ),
-      child: Obx(
-        () => GridView.builder(
+      child: Obx(() {
+        // 데이터가 없을 때의 예외 처리
+        if (viewModel.attendanceState.isEmpty) {
+          return const Center(
+            child: Text(
+              '데이터가 없습니다',
+              style: TextStyle(color: Colors.white),
+            ),
+          );
+        }
+
+        final currentState = viewModel.attendanceState[viewModel.selectedIndex];
+        final items = currentState.calendarItems;
+
+        return GridView.builder(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 5,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
           ),
-          itemCount: viewModel.getCurrentAttendanceState().length, // 예시로 15일
+          itemCount: items.length,
           itemBuilder: (context, index) {
-            return _buildStamp(index);
+            final status = _getStatusForDate(index, items);
+            return _buildDateCircle(status);
           },
+        );
+      }),
+    );
+  }
+
+  Widget _buildDateCircle(String status) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white.withOpacity(0.3),
+          width: 1,
         ),
+      ),
+      child: Center(
+        child: _getStatusIcon(status),
       ),
     );
   }
 
-  Widget _buildStamp(int index) {
-    // 예시 데이터 - 실제로는 동적으로 계산되어야 함
-    final date = DateTime.now().add(Duration(days: index));
-    final status = _getMockStatus(index); // 출석 상태 가져오기
-
-    return Column(
-      children: [
-        Container(
-          width: 62,
-          height: 62,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: ColorSystem.white.withOpacity(0.3),
-              width: 1,
+  Widget _getStatusIcon(String status) {
+    switch (status.toLowerCase()) {
+      case '완료':
+        return Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.green, width: 2),
+              ),
             ),
-          ),
-          child: Center(
-            child: _getStampIcon(status),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _getStampIcon(AttendanceStatus data) {
-    switch (data) {
-      case AttendanceStatus.complete:
-        return SvgPicture.asset('assets/icons/common/work_circle_check.svg',
-            width: 62);
-      case AttendanceStatus.warning:
-        return SvgPicture.asset('assets/icons/common/work_circle_warning.svg',
-            width: 62);
-      case AttendanceStatus.absent:
-        return SvgPicture.asset('assets/icons/common/work_circle_dangerous.svg',
-            width: 62);
-      case AttendanceStatus.upcoming:
+            Center(
+              child: SvgPicture.asset(
+                'assets/icons/common/work_circle_check.svg',
+                color: Colors.green,
+              ),
+            ),
+          ],
+        );
+      case '노력필요':
+        return Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.orange, width: 2),
+              ),
+            ),
+            Center(
+              child: SvgPicture.asset(
+                'assets/icons/common/work_circle_warning.svg',
+                color: Colors.orange,
+              ),
+            ),
+          ],
+        );
+      case '업무불참':
+        return Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.red, width: 2),
+              ),
+            ),
+            Center(
+              child: SvgPicture.asset(
+                'assets/icons/common/work_circle_dangerous.svg',
+                color: Colors.red,
+              ),
+            ),
+          ],
+        );
+      default:
         return Text(
           '일',
-          style: FontSystem.KR10B.copyWith(
-            color: ColorSystem.white.withOpacity(0.7),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.7),
+            fontSize: 12,
           ),
         );
     }
   }
 
-// 상태값 가져오기 (예시)
-  AttendanceStatus _getMockStatus(int dayIndex) {
-    if (dayIndex < 2) return AttendanceStatus.complete;
-    if (dayIndex == 2) return AttendanceStatus.warning;
-    if (dayIndex == 4) return AttendanceStatus.absent;
-    return AttendanceStatus.upcoming;
+  String _getStatusForDate(int index, List<CalendarItem> items) {
+    final item = items.firstWhere(
+      (item) => index == item.itemTime.day - 1,
+      orElse: () => CalendarItem(
+        itemTime: DateTime.now(),
+        status: 'upcoming',
+      ),
+    );
+    return item.status;
   }
 }

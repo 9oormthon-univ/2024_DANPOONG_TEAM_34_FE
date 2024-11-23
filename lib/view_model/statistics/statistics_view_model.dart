@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/statistics/attendance_state.dart';
 import 'package:rebootOffice/model/statistics/period_state.dart';
+import 'package:rebootOffice/repository/home/home_repository.dart';
 import 'package:rebootOffice/repository/statistics/statistics_repository.dart';
 
 class StatisticsViewModel extends GetxController {
@@ -10,16 +11,16 @@ class StatisticsViewModel extends GetxController {
   /* -------------------- DI Fields ----------------------- */
   /* ------------------------------------------------------ */
   late final _statisticsRepository;
+  late final _homeRepository;
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
   late final RxInt _selectedIndex = 0.obs;
   late final Rx<DateTime> _startDate = DateTime.now().obs;
-  late final RxInt _totalDays;
   late final RxBool _isTouched = false.obs;
+  late final RxString _userName = ''.obs;
   // 각 탭별 출석 데이터를 저장할 맵
-  final RxMap<int, List<AttendanceState>> _attendanceState =
-      RxMap<int, List<AttendanceState>>();
+  final RxList<AttendanceState> _attendanceState = RxList<AttendanceState>();
   final Rx<PeriodState> _periodState = PeriodState.initial().obs;
 
   /* ------------------------------------------------------ */
@@ -27,47 +28,27 @@ class StatisticsViewModel extends GetxController {
   /* ------------------------------------------------------ */
   int get selectedIndex => _selectedIndex.value;
   DateTime get startDate => _startDate.value;
-  int get totalDays => _totalDays.value;
   bool get isTouched => _isTouched.value;
   PeriodState get periodState => _periodState.value;
-  Map<int, List<AttendanceState>> get attendanceState => _attendanceState;
+  String get userName => _userName.value;
+
+  List<AttendanceState> get attendanceState => _attendanceState.value;
 
   @override
   void onInit() async {
     super.onInit();
+    // DI
     _statisticsRepository = Get.find<StatisticsRepository>();
+    _homeRepository = Get.find<HomeRepository>();
     // Initialize private fields
-    _totalDays = 16.obs; // 예시로 16일로 설정
+    _attendanceState
+        .addAll(List.generate(3, (index) => AttendanceState.empty()));
+    // 사용자의 출석 데이터를 읽어옴
+    readAttendanceList();
 
     // 출석 데이터 초기화
     readRemainPeriod();
-
-    _initMockData();
-  }
-
-  //출석 여부 데이터 값 초기화
-  void _initMockData() {
-    //
-    List<AttendanceState> data = [];
-
-    for (int i = 0; i < _totalDays.value; i++) {
-      final date = _startDate.value.add(Duration(days: i));
-      data.add(AttendanceState(
-        date: date,
-        status: _getMockStatus(i),
-      ));
-    }
-
-    _attendanceState[0] = data;
-    _attendanceState[1] = data;
-    _attendanceState[2] = data;
-  }
-
-  AttendanceStatus _getMockStatus(int dayIndex) {
-    if (dayIndex < 2) return AttendanceStatus.complete;
-    if (dayIndex == 2) return AttendanceStatus.warning;
-    if (dayIndex == 4) return AttendanceStatus.absent;
-    return AttendanceStatus.upcoming;
+    readUserName();
   }
 
   void setSelectedIndex(int index) {
@@ -78,12 +59,21 @@ class StatisticsViewModel extends GetxController {
     _isTouched.value = value;
   }
 
-  List<AttendanceState> getCurrentAttendanceState() {
-    return _attendanceState[selectedIndex] ?? [];
-  }
-
   void readRemainPeriod() async {
     // 남은 기간을 계산하는 로직
     _periodState.value = await _statisticsRepository.readUserPeriod();
+  }
+
+  void readAttendanceList() async {
+    // 현재 출석 상태를 읽어오는 로직
+    _attendanceState[0] = await _statisticsRepository.readUserAttendanceList(0);
+    _attendanceState[1] = await _statisticsRepository.readUserAttendanceList(1);
+    _attendanceState[2] = await _statisticsRepository.readUserAttendanceList(2);
+  }
+
+  void readUserName() async {
+    // 사용자 이름을 읽어오는 로직
+    final userState = await _homeRepository.readUserState();
+    _userName.value = userState.name;
   }
 }

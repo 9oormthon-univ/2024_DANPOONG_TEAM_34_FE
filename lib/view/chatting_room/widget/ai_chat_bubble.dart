@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rebootOffice/model/chatting/chat_state.dart';
+import 'package:rebootOffice/utility/functions/enumToKorean.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/chatting_list/chatting_room_list_screen.dart';
@@ -10,7 +11,7 @@ class AIChatBubble extends StatelessWidget {
   final ChatState message;
   final bool showProfile;
   final String eChatType;
-  const AIChatBubble({
+  AIChatBubble({
     super.key,
     required this.message,
     required this.showProfile,
@@ -39,8 +40,8 @@ class AIChatBubble extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (showProfile) ...[
-                  const Text(
-                    'AI 어시스턴트',
+                  Text(
+                    '일상회복본부 ${enumToKorean(eChatType)}팀',
                     style: FontSystem.KR14R,
                   ),
                   const SizedBox(height: 4),

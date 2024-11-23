@@ -36,7 +36,7 @@ class WeekSelector extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${weekNumber}주차',
+                '$weekNumber주차',
                 style: FontSystem.KR14R,
               ),
               const SizedBox(width: 4),
