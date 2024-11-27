@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:rebootOffice/utility/functions/on_boarding_util.dart';
@@ -83,9 +84,12 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/profile_npc.png',
-            width: 200,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: SvgPicture.asset(
+              'assets/images/profile_npc.svg',
+              width: 200,
+            ),
           ),
           const SizedBox(
             height: 32,
@@ -132,8 +136,8 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Image.asset(
-              'assets/images/profile_npc.png',
+            child: SvgPicture.asset(
+              'assets/images/profile_npc.svg',
               width: 200,
             ),
           ),
@@ -219,15 +223,18 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
   Widget _buildThirdPage() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
+      child: Stack(
+        alignment: Alignment.center,
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Image.asset('assets/images/profile_npc.png'),
+                child: SvgPicture.asset(
+                  'assets/images/profile_npc.svg',
+                  width: 200,
+                ),
               ),
               const SizedBox(height: 28),
               _buildTitle('몇 시까지 출근하시겠어요?'),
@@ -237,27 +244,29 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
                 height: 16,
               ),
               const ScrollTimePicker(),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: ColorSystem.blue.shade500,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: RoundedRectangleTextButton(
-                      text: '다음',
-                      textStyle: FontSystem.KR16B.copyWith(
-                        color: ColorSystem.white,
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      onPressed: () {
-                        viewModel.goToNextStep();
-                      }),
-                ),
-              )
             ],
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                color: ColorSystem.blue.shade500,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: RoundedRectangleTextButton(
+                  text: '다음',
+                  textStyle: FontSystem.KR16B.copyWith(
+                    color: ColorSystem.white,
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  onPressed: () {
+                    viewModel.goToNextStep();
+                  }),
+            ),
           ),
         ],
       ),
@@ -275,7 +284,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Image.asset('assets/images/profile_npc.png',
+                child: SvgPicture.asset('assets/images/profile_npc.svg',
                     width: 120, height: 120, fit: BoxFit.cover),
               ),
               const SizedBox(height: 20),
@@ -311,7 +320,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
                           }
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
                           child: MultiSelectBox(
                             selector: option,
                             isSelected: isSelected,
@@ -367,7 +376,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Image.asset('assets/images/profile_npc.png',
+                child: SvgPicture.asset('assets/images/profile_npc.svg',
                     width: 120, height: 120, fit: BoxFit.cover),
               ),
               const SizedBox(height: 20),
@@ -455,8 +464,12 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/profile_npc.png'),
+              SvgPicture.asset(
+                'assets/images/profile_npc.svg',
+                width: 200,
+              ),
               const SizedBox(height: 28),
               _buildTitle('근로계약서 작성이 완료되었습니다'),
               const SizedBox(height: 8),
@@ -500,7 +513,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
   Widget _buildLabel(String label) {
     return Text(
       label,
-      style: FontSystem.KR16R.copyWith(color: const Color(0xFF999999)),
+      style: FontSystem.KR16R.copyWith(color: ColorSystem.grey.shade600),
       textAlign: TextAlign.center,
     );
   }

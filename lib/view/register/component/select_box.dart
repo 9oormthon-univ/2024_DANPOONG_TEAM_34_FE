@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rebootOffice/utility/system/font_system.dart';
 
 class SelectBox extends StatelessWidget {
   const SelectBox({
@@ -28,15 +29,10 @@ class SelectBox extends StatelessWidget {
         mainAxisAlignment:
             isCenter ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
-          Text(
-            selector,
-            style: TextStyle(
-              color: isSelected
-                  ? const Color(0xFF111111)
-                  : const Color(0xFF999999),
-              fontSize: 16,
-            ),
-          ),
+          Text(selector,
+              style: isSelected
+                  ? FontSystem.KR16SB
+                  : FontSystem.KR16R.copyWith(color: Colors.grey.shade600)),
         ],
       ),
     );

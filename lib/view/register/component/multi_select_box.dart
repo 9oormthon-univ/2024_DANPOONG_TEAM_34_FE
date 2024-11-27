@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rebootOffice/utility/system/font_system.dart';
 
 class MultiSelectBox extends StatelessWidget {
   const MultiSelectBox({
@@ -33,15 +34,11 @@ class MultiSelectBox extends StatelessWidget {
                   : SvgPicture.asset('assets/icons/common/check_box.svg'),
               Padding(
                 padding: const EdgeInsets.only(left: 16),
-                child: Text(
-                  selector,
-                  style: TextStyle(
-                    color: isSelected
-                        ? const Color(0xFF111111)
-                        : const Color(0xFF999999),
-                    fontSize: 16,
-                  ),
-                ),
+                child: Text(selector,
+                    style: isSelected
+                        ? FontSystem.KR16SB
+                        : FontSystem.KR16R
+                            .copyWith(color: Colors.grey.shade600)),
               ),
             ],
           )),
