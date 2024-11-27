@@ -82,7 +82,9 @@ class ChattingRoomViewModel extends GetxController {
   }
 
   Future<void> sendMessage(int chatId) async {
-    if (_contentController.text.trim().isEmpty) return;
+    if (_contentController.text.trim().isEmpty && _imageFile.value == null) {
+      return;
+    }
 
     try {
       // 사용자 메시지 생성
