@@ -26,8 +26,9 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
   @override
   Widget buildBody(BuildContext context) {
     return Obx(() => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: _buildDateHeader()),
+            _buildDateHeader(),
             Expanded(
               child: _buildTaskList(),
             ),
@@ -37,9 +38,9 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
 
   Widget _buildDateHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
       child: const Text(
-        '2024년 11월 24일 일요일',
+        '2024년 11월 30일 토요일',
         style: FontSystem.KR20M,
       ),
     );
