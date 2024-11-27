@@ -6,10 +6,12 @@ import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
 
 class ReportButton extends StatelessWidget {
   final VoidCallback onTap;
+  final bool isSelected;
 
   const ReportButton({
     super.key,
     required this.onTap,
+    required this.isSelected,
   });
 
   @override
@@ -17,10 +19,12 @@ class ReportButton extends StatelessWidget {
     return RoundedRectangleTextButton(
       onPressed: onTap,
       width: Get.width,
-      backgroundColor: ColorSystem.blue.shade500,
+      backgroundColor:
+          isSelected ? ColorSystem.blue.shade500 : ColorSystem.grey.shade200,
       padding: const EdgeInsets.symmetric(vertical: 18),
       text: '업무일지 보러가기',
-      textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white),
+      textStyle: FontSystem.KR16B.copyWith(
+          color: isSelected ? ColorSystem.white : ColorSystem.grey.shade400),
     );
   }
 }

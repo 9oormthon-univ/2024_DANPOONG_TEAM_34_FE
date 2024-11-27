@@ -6,7 +6,7 @@ import 'package:rebootOffice/view/home/widget/week_calendar.dart';
 
 import 'week_selector.dart';
 
-class WeekCalendarCard extends StatelessWidget {
+class WeekCalendarCard extends StatefulWidget {
   final WeekState weekState;
   final VoidCallback onWeekSelect;
   final VoidCallback onReportTap;
@@ -19,8 +19,15 @@ class WeekCalendarCard extends StatelessWidget {
   });
 
   @override
+  State<WeekCalendarCard> createState() => _WeekCalendarCardState();
+}
+
+class _WeekCalendarCardState extends State<WeekCalendarCard> {
+  DateTime? _selectedDate;
+
+  @override
   Widget build(BuildContext context) {
-    final now = weekState.currentTime;
+    final now = widget.weekState.currentTime;
     final weekNumber = ((now.day - 1) ~/ 7);
 
     return Container(
@@ -36,12 +43,27 @@ class WeekCalendarCard extends StatelessWidget {
             year: now.year,
             month: now.month,
             weekNumber: weekNumber,
-            onTap: onWeekSelect,
+            onTap: widget.onWeekSelect,
           ),
           const SizedBox(height: 16),
-          WeekCalendarView(weekState: weekState),
+          WeekCalendarView(
+            weekState: widget.weekState,
+            selectedDate: _selectedDate,
+            onDateSelected: (date) {
+              setState(() {
+                _selectedDate = date;
+              });
+            },
+          ),
           const SizedBox(height: 16),
-          ReportButton(onTap: onReportTap),
+          ReportButton(
+              isSelected: _selectedDate != null,
+              onTap: () {
+                // 날짜 선택해야만 업무일지 볼 수 있음
+                if (_selectedDate != null) {
+                  widget.onReportTap();
+                }
+              }),
         ],
       ),
     );

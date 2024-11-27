@@ -4,10 +4,14 @@ import 'package:rebootOffice/view/home/widget/day_item.dart';
 
 class WeekCalendarView extends StatelessWidget {
   final WeekState weekState;
+  final DateTime? selectedDate;
+  final Function(DateTime) onDateSelected;
 
   const WeekCalendarView({
     super.key,
     required this.weekState,
+    required this.selectedDate,
+    required this.onDateSelected,
   });
 
   @override
@@ -16,13 +20,19 @@ class WeekCalendarView extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: days
-          .map((day) => DayItem(
-                weekday: day['weekday'] as String,
-                date: day['date'] as String,
-                isSelected: day['isSelected'] as bool,
-              ))
-          .toList(),
+      children: days.map((day) {
+        final date = day['date'] as DateTime;
+        return DayItem(
+          weekday: day['weekday'] as String,
+          date: date.day.toString(),
+          isSelected: day['isSelected'] as bool,
+          isActive: selectedDate != null &&
+              date.year == selectedDate!.year &&
+              date.month == selectedDate!.month &&
+              date.day == selectedDate!.day,
+          onTap: () => onDateSelected(date),
+        );
+      }).toList(),
     );
   }
 
@@ -34,7 +44,7 @@ class WeekCalendarView extends StatelessWidget {
       final date = weekStart.add(Duration(days: index));
       return {
         'weekday': _getWeekdayString(date.weekday),
-        'date': date.day.toString(),
+        'date': date,
         'isSelected': _isDateInWorkPeriod(
             date, weekState.workStartTime, weekState.workEndTime),
       };

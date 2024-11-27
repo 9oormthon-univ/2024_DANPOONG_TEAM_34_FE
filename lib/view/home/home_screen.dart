@@ -55,6 +55,9 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
                 const StatusCard(),
                 const WelcomeCard(),
                 _buildSchedule(),
+                const SizedBox(
+                  height: 16,
+                ),
                 _buildCalendarSection(context),
               ],
             ),
@@ -82,7 +85,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
         const SizedBox(height: 24),
         const Text(
           '오늘 근무 리스트',
-          style: FontSystem.KR14B,
+          style: FontSystem.KR16B,
         ),
         const SizedBox(height: 16),
         Container(
@@ -122,24 +125,27 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     required bool isFirst,
   }) {
     final now = DateTime.now();
-    // final isCurrentTime = now.isAfter(startTime) &&
-    //     now.isBefore(startTime.add(const Duration(hours: 1)));
+    final startParts = startTime.split(':');
+    final start = DateTime(now.year, now.month, now.day,
+        int.parse(startParts[0]), int.parse(startParts[1]));
+    final isCurrentTime =
+        now.isAfter(start) && now.isBefore(start.add(const Duration(hours: 1)));
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDone
             ? ColorSystem.grey.shade200
-            // : isCurrentTime
-            //     ? const Color(0xFF0066FF).withOpacity(0.1)
-            : ColorSystem.white,
+            : isCurrentTime
+                ? const Color(0xFF0066FF).withOpacity(0.1)
+                : ColorSystem.white,
         borderRadius: isFirst
             ? const BorderRadius.only(
                 topLeft: Radius.circular(16), topRight: Radius.circular(16))
             : null,
         border: Border(
           bottom: BorderSide(
-            color: ColorSystem.grey.shade500,
+            color: isCurrentTime ? ColorSystem.Blue : ColorSystem.grey.shade500,
             width: 0.5,
           ),
         ),
