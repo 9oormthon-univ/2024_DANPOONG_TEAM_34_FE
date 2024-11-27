@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
@@ -25,8 +26,24 @@ class OnboardingLoadScreen extends BaseScreen<OnboardingViewModel> {
     Future.delayed(Duration.zero, () => viewModel.startAnimation());
     return Stack(
       children: [
+        _buildLoadingBackground(),
         _buildLoadingText(),
       ],
+    );
+  }
+
+  Widget _buildLoadingBackground() {
+    return Center(
+      child: OverflowBox(
+        maxWidth: double.infinity,
+        maxHeight: double.infinity,
+        child: Lottie.asset(
+          'assets/animation/load_animation.json',
+          width: 600, // 원래 크기 유지
+          height: 600,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 

@@ -71,7 +71,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           '${viewModel.userState.name}님 잘 해내고 있어요!\n 조금씩 나아가 보아요',
           style: FontSystem.KR24B,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
       ],
     );
   }

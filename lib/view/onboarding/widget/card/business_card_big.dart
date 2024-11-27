@@ -74,7 +74,7 @@ class BusinessCardBig extends StatelessWidget {
                       children: [
                         Text(
                           "리부트오피스 일상회복팀 | ",
-                          style: FontSystem.MKR16R
+                          style: FontSystem.MKR14R
                               .copyWith(color: ColorSystem.white),
                         ),
                         Text(
@@ -95,13 +95,13 @@ class BusinessCardBig extends StatelessWidget {
                           children: [
                             Text(
                               email,
-                              style: FontSystem.MKR16R
+                              style: FontSystem.MKR14R
                                   .copyWith(color: ColorSystem.white),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               phone,
-                              style: FontSystem.MKR16R
+                              style: FontSystem.MKR14R
                                   .copyWith(color: ColorSystem.white),
                             ),
                           ],

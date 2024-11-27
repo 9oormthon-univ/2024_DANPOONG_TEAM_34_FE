@@ -166,12 +166,12 @@ class OnboardingViewModel extends GetxController {
     }
   }
 
-  String formatBirthday(String birthday) {
-    if (birthday.length == 8) {
-      return '${birthday.substring(0, 4)}-${birthday.substring(4, 6)}-${birthday.substring(6, 8)}';
-    }
-    return birthday;
-  }
+  // String formatBirthday(String birthday) {
+  //   if (birthday.length == 8) {
+  //     return '${birthday.substring(0, 4)}-${birthday.substring(4, 6)}-${birthday.substring(6, 8)}';
+  //   }
+  //   return birthday;
+  // }
 
   Future<void> submitUserData() async {
     try {
@@ -187,7 +187,7 @@ class OnboardingViewModel extends GetxController {
         textController.text,
         textEnController.text,
         selectedGender!,
-        formatBirthday(textBirthController.text),
+        textBirthController.text,
         textMotivateController.text,
       );
 
@@ -195,7 +195,7 @@ class OnboardingViewModel extends GetxController {
         "name": textController.text,
         "nameEn": textEnController.text,
         "gender": selectedGender,
-        "birthday": formatBirthday(textBirthController.text),
+        "birthday": textBirthController.text,
         "motivation": textMotivateController.text
       };
 

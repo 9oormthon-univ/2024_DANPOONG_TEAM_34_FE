@@ -40,7 +40,6 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitle(),
-          const SizedBox(height: 20),
           BusinessCard(
             name: viewModel.userName,
             nameEn: viewModel.userNameEn,
@@ -63,7 +62,7 @@ class OnboardingResultScreen extends BaseScreen<OnboardingViewModel> {
       children: [
         Text(
           '환영합니다! 이제 우리 회사의\n소중한 일원이 되셨습니다.',
-          style: FontSystem.KR24B,
+          style: FontSystem.KR28B,
         ),
         SizedBox(height: 16),
       ],

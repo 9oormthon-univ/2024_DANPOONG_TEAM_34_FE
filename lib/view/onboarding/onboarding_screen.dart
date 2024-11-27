@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
@@ -34,31 +35,36 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Obx(() {
-      return Column(
-        children: [
-          // 페이지네이션 바
-          _buildPaginationIndicator(viewModel.currentPageIndex),
-          const SizedBox(height: 24),
-          // PageView로 컨텐츠 렌더링
-          Expanded(
-            child: PageView(
-              controller: viewModel.pageController, // PageController 연결
-              onPageChanged: (index) {
-                viewModel.currentPageIndex = index; // ViewModel과 동기화
-              },
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                _buildNameInputStep(),
-                _buildBirthInputStep(),
-                _buildGenderSelectionStep(),
-                _buildMotivateInputStep(),
-              ],
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Obx(() {
+        return Column(
+          children: [
+            // 페이지네이션 바
+            _buildPaginationIndicator(viewModel.currentPageIndex),
+            const SizedBox(height: 24),
+            // PageView로 컨텐츠 렌더링
+            Expanded(
+              child: PageView(
+                controller: viewModel.pageController, // PageController 연결
+                onPageChanged: (index) {
+                  viewModel.currentPageIndex = index; // ViewModel과 동기화
+                },
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  _buildNameInputStep(),
+                  _buildBirthInputStep(),
+                  _buildGenderSelectionStep(),
+                  _buildMotivateInputStep(),
+                ],
+              ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      }),
+    );
   }
 
   Widget _buildPaginationIndicator(int step) {
@@ -82,11 +88,11 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
         TextField(
           cursorHeight: 20,
           controller: viewModel.textController,
-          style: FontSystem.KR16M,
+          style: FontSystem.KR16SB,
           decoration: InputDecoration(
             hintText: "이름을 입력해주세요.",
             hintStyle:
-                FontSystem.KR16B.copyWith(color: ColorSystem.grey.shade600),
+                FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600),
             filled: true,
             fillColor: viewModel.textController.text.isNotEmpty
                 ? ColorSystem.lightBlue
@@ -115,17 +121,17 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
           ),
         ),
         const SizedBox(
-          height: 32,
+          height: 16,
         ),
         _buildLabel('영문 이름'),
         TextField(
           cursorHeight: 20,
           controller: viewModel.textEnController,
-          style: FontSystem.KR16M,
+          style: FontSystem.KR16SB,
           decoration: InputDecoration(
             hintText: "영문 이름을 입력해주세요.",
             hintStyle:
-                FontSystem.KR16B.copyWith(color: ColorSystem.grey.shade600),
+                FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600),
             filled: true,
             fillColor: viewModel.textEnController.text.isNotEmpty
                 ? ColorSystem.lightBlue
@@ -188,9 +194,9 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       children: [
         Text(
           text,
-          style: FontSystem.KR24B,
+          style: FontSystem.KR28B,
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 42),
       ],
     );
   }
@@ -202,7 +208,7 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
           label,
           style: FontSystem.KR14R,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
       ],
     );
   }
@@ -213,19 +219,20 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildTitle('생년월일을\n입력해 주세요.'),
         _buildLabel('생년월일'),
-        const SizedBox(
-          height: 12,
-        ),
         TextField(
+          keyboardType: TextInputType.number,
           cursorHeight: 20,
           controller: viewModel.textBirthController,
-          style: FontSystem.KR16M,
+          style: FontSystem.KR16SB,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(10),
+            DateInputFormatter(),
+          ],
           decoration: InputDecoration(
-            hintText: "YYYY.MM.DD",
-            hintStyle: const TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 16,
-            ),
+            hintText: "YYYY-MM-DD",
+            hintStyle:
+                FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600),
             filled: true,
             fillColor: viewModel.textBirthController.text.isNotEmpty
                 ? const Color(0xFFE5F0FF)
@@ -291,7 +298,6 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
         children: [
           _buildTitle('성별을\n선택해주세요.'),
           _buildLabel('성별'),
-          const SizedBox(height: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -356,13 +362,11 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
           maxLength: 200,
           cursorHeight: 20,
           controller: viewModel.textMotivateController,
-          style: FontSystem.KR16M,
+          style: FontSystem.KR16SB,
           decoration: InputDecoration(
             hintText: "간단한 자기소개와 지원동기를 적어주세요",
-            hintStyle: const TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 16,
-            ),
+            hintStyle:
+                FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             filled: true,
@@ -393,7 +397,7 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
           ),
         ),
         const SizedBox(
-          height: 28,
+          height: 18,
         ),
         _buildExample(),
         const Spacer(),
@@ -462,5 +466,28 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
         ),
       ],
     );
+  }
+}
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final text = newValue.text;
+
+    if (text.length >= 5 && text.length <= 6) {
+      return TextEditingValue(
+        text: '${text.substring(0, 4)}-${text.substring(4)}',
+        selection: TextSelection.collapsed(offset: text.length + 1),
+      );
+    } else if (text.length >= 8) {
+      return TextEditingValue(
+        text:
+            '${text.substring(0, 4)}-${text.substring(4, 6)}-${text.substring(6)}',
+        selection: TextSelection.collapsed(offset: text.length + 2),
+      );
+    }
+
+    return newValue;
   }
 }

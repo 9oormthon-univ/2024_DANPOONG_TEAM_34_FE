@@ -48,6 +48,12 @@ abstract class FontSystem {
     fontFamily: 'Montserrat',
     color: Colors.black,
   );
+  static const TextStyle MKR14R = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Montserrat',
+    color: Colors.black,
+  );
 
   static const TextStyle MKR12B = TextStyle(
     fontSize: 12,
@@ -283,6 +289,13 @@ abstract class FontSystem {
     color: Colors.black,
   );
 
+  static const TextStyle KR20SB = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'Pretendard',
+    color: Colors.black,
+  );
+
   static const TextStyle KR20M = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w500,
@@ -334,6 +347,13 @@ abstract class FontSystem {
   static const TextStyle KR16B = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w700,
+    fontFamily: 'Pretendard',
+    color: Colors.black,
+  );
+
+  static const TextStyle KR16SB = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
     fontFamily: 'Pretendard',
     color: Colors.black,
   );

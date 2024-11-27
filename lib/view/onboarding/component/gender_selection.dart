@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
+import 'package:rebootOffice/utility/system/font_system.dart';
 
 class GenderSelection extends StatelessWidget {
   const GenderSelection({
@@ -30,15 +31,11 @@ class GenderSelection extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                selector,
-                style: TextStyle(
-                  color: isSelected
-                      ? ColorSystem.black
-                      : ColorSystem.grey.shade600,
-                  fontSize: 16,
-                ),
-              ),
+              child: Text(selector,
+                  style: isSelected
+                      ? FontSystem.KR16SB
+                      : FontSystem.KR16M
+                          .copyWith(color: ColorSystem.grey.shade600)),
             ),
           ],
         ),
