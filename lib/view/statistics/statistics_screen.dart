@@ -53,7 +53,7 @@ class StatisticsScreen extends BaseScreen<StatisticsViewModel> {
 
   Widget _buildTitle() {
     return Text(
-      '${viewModel.userName} ${getEmployeeStatus(viewModel.periodState.contractPeriod, viewModel.periodState.remainPeriod, viewModel.periodState.progressPeriod)}님!\n벌써 출근 ${viewModel.periodState.progressPeriod} 일차네요!',
+      '${viewModel.userName} ${getEmployeeStatus(viewModel.periodState.contractPeriod, viewModel.periodState.remainPeriod, viewModel.periodState.progressPeriod)}님,\n벌써 출근 ${viewModel.periodState.progressPeriod}일차네요!',
       style: FontSystem.KR24B,
     );
   }

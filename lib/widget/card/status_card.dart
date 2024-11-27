@@ -29,7 +29,7 @@ class StatusCard extends BaseWidget<StatisticsViewModel> {
             children: [
               Text(
                 viewModel.isTouched
-                    ? '목표까지 앞으로 ${viewModel.periodState.remainPeriod} 일'
+                    ? '목표까지 앞으로 ${viewModel.periodState.remainPeriod}일!'
                     : '일상회복팀 | ${getEmployeeStatus(viewModel.periodState.contractPeriod, viewModel.periodState.remainPeriod, viewModel.periodState.progressPeriod)}',
                 style: FontSystem.KR14B.copyWith(color: ColorSystem.white),
               ),

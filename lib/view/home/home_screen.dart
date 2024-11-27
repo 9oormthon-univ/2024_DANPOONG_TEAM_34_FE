@@ -71,7 +71,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     return Column(
       children: [
         Text(
-          '${viewModel.userState.name}님 잘 해내고 있어요!\n 조금씩 나아가 보아요',
+          '${viewModel.userState.name}님 잘 해내고 있어요!\n조금씩 나아가 보아요',
           style: FontSystem.KR24B,
         ),
         const SizedBox(height: 16),

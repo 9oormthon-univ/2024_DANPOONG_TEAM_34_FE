@@ -179,7 +179,7 @@ class CalendarGrid extends BaseWidget<StatisticsViewModel> {
               child: Text(
                 '${date.month}월 ${date.day}일',
                 style:
-                    FontSystem.KR14M.copyWith(color: ColorSystem.grey.shade500),
+                    FontSystem.KR12M.copyWith(color: ColorSystem.grey.shade500),
               ),
             )
           : _getStatusIcon(status),
@@ -216,19 +216,13 @@ class CalendarGrid extends BaseWidget<StatisticsViewModel> {
   }
 
   List<DateTime> _getDatesInRange(int index) {
-    if (viewModel.attendanceState == null ||
-        index >= viewModel.attendanceState.length) {
+    if (index >= viewModel.attendanceState.length) {
       return [];
     }
 
     final List<DateTime> dates = [];
     final startDate = viewModel.attendanceState[index].workStartTime;
     final endDate = viewModel.attendanceState[index].workEndTime;
-
-    // null 체크 추가
-    if (startDate == null || endDate == null) {
-      return [];
-    }
 
     // 날짜 차이 계산
     final difference = endDate.difference(startDate).inDays;
