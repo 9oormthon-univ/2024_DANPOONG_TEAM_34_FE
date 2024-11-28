@@ -82,6 +82,7 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
                 barrierColor: Colors.black.withOpacity(0.5),
                 builder: (context) => CustomTwoButtonModal(
                   title: "Your Title",
+                  label: "sub Info",
                   leftButtonText: "Cancel",
                   rightButtonText: "Confirm",
                   onLeftButtonTap: () {},
