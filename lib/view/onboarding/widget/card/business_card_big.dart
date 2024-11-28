@@ -60,11 +60,11 @@ class BusinessCardBig extends StatelessWidget {
                     Row(
                       children: [
                         Text(name,
-                            style: FontSystem.MKR24B
+                            style: FontSystem.MKR20B
                                 .copyWith(color: ColorSystem.white)),
                         const SizedBox(width: 8),
                         Text(nameEn,
-                            style: FontSystem.MKR20M.copyWith(
+                            style: FontSystem.MKR16B.copyWith(
                               color: ColorSystem.white,
                             ))
                       ],
@@ -74,12 +74,12 @@ class BusinessCardBig extends StatelessWidget {
                       children: [
                         Text(
                           "리부트오피스 일상회복팀 | ",
-                          style: FontSystem.MKR14R
+                          style: FontSystem.MKR12R
                               .copyWith(color: ColorSystem.white),
                         ),
                         Text(
                           department,
-                          style: FontSystem.MKR16R
+                          style: FontSystem.MKR12R
                               .copyWith(color: ColorSystem.white),
                         ),
                       ],
@@ -95,13 +95,13 @@ class BusinessCardBig extends StatelessWidget {
                           children: [
                             Text(
                               email,
-                              style: FontSystem.MKR14R
+                              style: FontSystem.MKR12R
                                   .copyWith(color: ColorSystem.white),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               phone,
-                              style: FontSystem.MKR14R
+                              style: FontSystem.MKR12R
                                   .copyWith(color: ColorSystem.white),
                             ),
                           ],
