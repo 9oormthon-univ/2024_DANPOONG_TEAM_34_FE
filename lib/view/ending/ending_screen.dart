@@ -38,7 +38,19 @@ class EndingScreen extends BaseScreen<EndingViewModel> {
     return Column(
       children: [
         const SizedBox(height: 32),
-        Expanded(child: Center(child: _buildFirstPage())),
+        Expanded(child: Center(child: _buildPageView())),
+      ],
+    );
+  }
+
+  Widget _buildPageView() {
+    return PageView(
+      controller: viewModel.pageController,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        _buildFirstPage(),
+        _buildSecondPage(),
+        _buildThirdPage(Get.context!),
       ],
     );
   }
