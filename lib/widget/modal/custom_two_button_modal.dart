@@ -42,6 +42,7 @@ class CustomTwoButtonModal extends StatelessWidget {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
       child: Dialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -54,6 +55,9 @@ class CustomTwoButtonModal extends StatelessWidget {
                 title,
                 style: FontSystem.KR16B,
                 textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 8,
               ),
               Text(
                 label,

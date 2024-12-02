@@ -50,6 +50,12 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
 
     return Column(children: [
       _buildMenuButton(
+        title: '알림 설정',
+        onTap: () {
+          // 알림 설정 페이지로 이동
+        },
+      ),
+      _buildMenuButton(
         title: '서비스 이용 약관',
         onTap: () {
           // 서비스 이용 약관 페이지로 이동
@@ -67,12 +73,12 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
           // 고객센터 페이지로 이동
         },
       ),
-      _buildMenuButton(
-        title: '프로그램',
-        onTap: () {
-          // 프로그램 페이지로 이동
-        },
-      ),
+      // _buildMenuButton(
+      //   title: '프로그램',
+      //   onTap: () {
+      //     // 프로그램 페이지로 이동
+      //   },
+      // ),
       _buildMenuButton(
           title: '로그아웃', onTap: () => authRepository.clearTokens()),
       _buildMenuButton(
@@ -81,10 +87,11 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
                 context: context,
                 barrierColor: Colors.black.withOpacity(0.5),
                 builder: (context) => CustomTwoButtonModal(
-                  title: "Your Title",
-                  label: "sub Info",
-                  leftButtonText: "Cancel",
-                  rightButtonText: "Confirm",
+                  title: "회원 탈퇴 안내",
+                  label:
+                      "회원 탈퇴 시, 지금까지 수행한 모든\n업무 기록과 데이터가 영구적으로 삭제됩니다.\n삭제된 내용은 복구할 수 없습니다.\n탈퇴를 진행하시려면 확인 버튼을 눌러주세요",
+                  leftButtonText: "취소",
+                  rightButtonText: "확인",
                   onLeftButtonTap: () {},
                   onRightButtonTap: () {},
                 ),
