@@ -42,9 +42,13 @@ class RegisterViewModel extends GetxController {
     "저녁 (18:00 ~ 19:00)",
   ];
 
-  // 시간 선택
-  Rx<DateTime> selectedTimeHours = DateTime(2024, 1, 1, 7, 0).obs;
-  Rx<DateTime> selectedTimeMinutes = DateTime(2024, 1, 1, 0, 0).obs;
+  // 시간 컨트롤러
+  final RxInt _selectedHours = 6.obs;
+  final RxInt _selectedMinutes = 0.obs;
+
+  // // 시간 선택
+  // Rx<DateTime> selectedTimeHours = DateTime(2024, 1, 1, 7, 0).obs;
+  // Rx<DateTime> selectedTimeMinutes = DateTime(2024, 1, 1, 0, 0).obs;
 
   RxBool isChangeHours = false.obs;
 
@@ -69,6 +73,14 @@ class RegisterViewModel extends GetxController {
       _selectedWorkPlace.value.isEmpty ? null : _selectedWorkPlace.value;
 
   bool get isSelectWorkPlace => _selectedWorkPlace.value.isEmpty ? false : true;
+
+  // 시간 선택
+  int get selectedHours => _selectedHours.value;
+  int get selectedMinutes => _selectedMinutes.value;
+
+  String getSelectedTime() {
+    return '${_selectedHours.value.toString().padLeft(2, '0')}:${_selectedMinutes.value.toString().padLeft(2, '0')}';
+  }
 
   @override
   void onInit() {
@@ -104,12 +116,21 @@ class RegisterViewModel extends GetxController {
     _selectedWorkPlace.value = work;
   }
 
-  void updateSelectedHours(DateTime newTime) {
-    selectedTimeHours.value = newTime;
+  // void updateSelectedHours(DateTime newTime) {
+  //   selectedTimeHours.value = newTime;
+  // }
+
+  // void updateSelectedMinutes(DateTime updatedTime) {
+  //   selectedTimeMinutes.value = updatedTime;
+  // }
+
+  // 시간 선택
+  void updateSelectedHour(int hour) {
+    _selectedHours.value = hour;
   }
 
-  void updateSelectedMinutes(DateTime updatedTime) {
-    selectedTimeMinutes.value = updatedTime;
+  void updateSelectedMinute(int minute) {
+    _selectedMinutes.value = minute;
   }
 
   /// 다음 페이지로 이동
@@ -160,17 +181,16 @@ class RegisterViewModel extends GetxController {
     // 선택된 근무 주차 변환 (1주, 2주, 3주 -> 1, 2, 3)
     int partTime = int.parse(_selectedWork.value.replaceAll('주', '')) * 7;
     // 출근 시간 포맷팅 (HH:mm:ss)
-    String attendanceTime =
-        "${selectedTimeHours.value.hour.toString().padLeft(2, '0')}:"
-        "${selectedTimeMinutes.value.minute.toString().padLeft(2, '0')}:00";
+    String attendanceTime = "${selectedHours.toString().padLeft(2, '0')}:"
+        "${selectedMinutes.toString().padLeft(2, '0')}:00";
 
     final now = DateTime.now();
     DateTime workStartTime = DateTime(
       now.year,
       now.month,
       now.day,
-      selectedTimeHours.value.hour,
-      selectedTimeMinutes.value.minute,
+      selectedHours,
+      selectedMinutes,
     );
     String workStartTimeString = workStartTime.year.toString() +
         '-' +

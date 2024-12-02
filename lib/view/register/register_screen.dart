@@ -241,7 +241,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
               const SizedBox(height: 8),
               _buildLabel('선택하신 시간에 기상하셔서 기상 인증\n미션을 진행하게 됩니다'),
               const SizedBox(
-                height: 16,
+                height: 24,
               ),
               const ScrollTimePicker(),
             ],
