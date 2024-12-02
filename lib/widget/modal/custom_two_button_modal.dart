@@ -21,6 +21,7 @@ import 'package:rebootOffice/utility/system/font_system.dart';
  */
 class CustomTwoButtonModal extends StatelessWidget {
   final String title;
+  final String label;
   final String leftButtonText;
   final String rightButtonText;
   final VoidCallback onLeftButtonTap;
@@ -33,6 +34,7 @@ class CustomTwoButtonModal extends StatelessWidget {
     required this.rightButtonText,
     required this.onLeftButtonTap,
     required this.onRightButtonTap,
+    required this.label,
   });
 
   @override
@@ -51,6 +53,12 @@ class CustomTwoButtonModal extends StatelessWidget {
               Text(
                 title,
                 style: FontSystem.KR16B,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                label,
+                style:
+                    FontSystem.KR14R.copyWith(color: ColorSystem.grey.shade600),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),

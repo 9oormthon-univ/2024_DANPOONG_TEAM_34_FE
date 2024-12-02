@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:rebootOffice/view_model/chatting_list/chatting_room_list_view_model.dart';
 import 'package:rebootOffice/view_model/chatting_room/chatting_room_view_model.dart';
+import 'package:rebootOffice/view_model/ending/ending_view_model.dart';
 import 'package:rebootOffice/view_model/login/login_view_model.dart';
 import 'package:rebootOffice/view_model/onboarding/onboarding_view_model.dart';
 import 'package:rebootOffice/view_model/register/register_view_model.dart';
@@ -25,6 +26,7 @@ class RootBinding extends Bindings {
     OnboardingBinding().dependencies();
     LoginBinding().dependencies();
     RegisterBinding().dependencies();
+    EndingBinding().dependencies();
   }
 }
 
@@ -107,6 +109,15 @@ class RegisterBinding extends Bindings {
     Get.lazyPut<RegisterViewModel>(
       () => RegisterViewModel(),
       fenix: true, // 인스턴스가 필요할 때마다 새로 생성
+    );
+  }
+}
+
+class EndingBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<EndingViewModel>(
+      () => EndingViewModel(),
     );
   }
 }
