@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
 import 'package:rebootOffice/view/home/widget/home_business_card.dart';
 import 'package:rebootOffice/view_model/see_more/see_more_view_model.dart';
@@ -82,7 +83,7 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
       _buildMenuButton(
           title: '로그아웃', onTap: () => authRepository.clearTokens()),
       _buildMenuButton(
-          title: '다시 시작하기',
+          title: '회원탈퇴',
           onTap: () => showDialog(
                 context: context,
                 barrierColor: Colors.black.withOpacity(0.5),
@@ -117,10 +118,7 @@ class SeeMoreScreen extends BaseScreen<SeeMoreViewModel> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: FontSystem.KR16R,
                 ),
                 const Icon(
                   Icons.arrow_forward_ios,
