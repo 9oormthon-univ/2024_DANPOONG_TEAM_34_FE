@@ -1,10 +1,12 @@
 import 'dart:core';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/statistics/attendance_state.dart';
 import 'package:rebootOffice/model/statistics/period_state.dart';
 import 'package:rebootOffice/repository/home/home_repository.dart';
 import 'package:rebootOffice/repository/statistics/statistics_repository.dart';
+import 'package:rebootOffice/view/statistics/widget/popup_onboarding_statistics_modal.dart';
 
 class StatisticsViewModel extends GetxController {
   /* ------------------------------------------------------ */
@@ -75,5 +77,16 @@ class StatisticsViewModel extends GetxController {
     // 사용자 이름을 읽어오는 로직
     final userState = await _homeRepository.readUserState();
     _userName.value = userState.name;
+  }
+
+  // 팝업 온보딩 보여주는 함수
+  void showBusinessCardPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const PopupOnboardingStatisticsModal();
+      },
+    );
   }
 }

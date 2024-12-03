@@ -1,6 +1,10 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/chatting/chatting_room_state.dart';
 import 'package:rebootOffice/repository/chatting/chatting_repository.dart';
+import 'package:rebootOffice/view/chatting_list/widget/popup_onboarding_chat_modal.dart';
 import 'package:rebootOffice/view_model/root/root_view_model.dart';
 
 class ChattingRoomListViewModel extends GetxController {
@@ -40,5 +44,16 @@ class ChattingRoomListViewModel extends GetxController {
 
   void selectBottomBarIndex(int chatId) {
     _rootViewModel.fetchIndex(chatId);
+  }
+
+  // 팝업 온보딩 보여주는 함수
+  void showBusinessCardPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const PopupOnboardingChatModal();
+      },
+    );
   }
 }

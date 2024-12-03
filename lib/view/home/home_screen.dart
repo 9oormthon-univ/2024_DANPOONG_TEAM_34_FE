@@ -36,6 +36,12 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
+    // 온보딩 팝업 (주석처리하면 팝업 안보임)
+    // 사용자가 한 번 팝업 보면 그 이후로 안보이게 하는 기능 구현? 필요?
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel.showBusinessCardPopup(context);
+    });
+
     return RefreshIndicator(
       onRefresh: () async {
         await viewModel.readWeek();
