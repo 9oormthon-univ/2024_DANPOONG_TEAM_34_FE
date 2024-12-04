@@ -168,7 +168,7 @@ class ScrollTimePicker extends BaseWidget<RegisterViewModel> {
               useMagnifier: true,
               magnification: 1,
               onSelectedItemChanged: (index) {
-                controller.updateSelectedMinute(index * 10);
+                viewModel.updateSelectedMinute(index * 10);
               },
               children: List.generate(
                 6, // 00분부터 50분까지 10분 단위
