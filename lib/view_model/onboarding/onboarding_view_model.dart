@@ -199,6 +199,8 @@ class OnboardingViewModel extends GetxController {
         "motivation": textMotivateController.text
       };
 
+      LogUtil.debug(response.isOk);
+      LogUtil.info('Sending payload to server: $response');
       LogUtil.debug('전송할 데이터: ${userData.toString()}');
       LogUtil.debug('API 응답: ${response.body}');
 

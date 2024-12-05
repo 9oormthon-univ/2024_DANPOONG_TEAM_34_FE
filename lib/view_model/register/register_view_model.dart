@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:rebootOffice/app/firebase/local_fcm_service.dart';
 import 'package:rebootOffice/repository/register/register_repository.dart';
 import 'package:rebootOffice/utility/functions/log_util.dart';
+import 'package:rebootOffice/utility/static/app_routes.dart';
 
 class RegisterViewModel extends GetxController {
   /* ------------------------------------------------------ */
@@ -46,9 +48,9 @@ class RegisterViewModel extends GetxController {
   final RxInt _selectedHours = 6.obs;
   final RxInt _selectedMinutes = 0.obs;
 
-  // // 시간 선택
-  // Rx<DateTime> selectedTimeHours = DateTime(2024, 1, 1, 7, 0).obs;
-  // Rx<DateTime> selectedTimeMinutes = DateTime(2024, 1, 1, 0, 0).obs;
+  // 시간 선택
+  Rx<DateTime> selectedTimeHours = DateTime(2024, 1, 1, 7, 0).obs;
+  Rx<DateTime> selectedTimeMinutes = DateTime(2024, 1, 1, 0, 0).obs;
 
   RxBool isChangeHours = false.obs;
 
@@ -81,6 +83,10 @@ class RegisterViewModel extends GetxController {
   String getSelectedTime() {
     return '${_selectedHours.value.toString().padLeft(2, '0')}:${_selectedMinutes.value.toString().padLeft(2, '0')}';
   }
+
+  // String getSelectedTime() {
+  //   return '${selectedTimeHours.value.hour.toString().padLeft(2, '0')}:${selectedTimeMinutes.value.minute.toString().padLeft(2, '0')}';
+  // }
 
   @override
   void onInit() {
@@ -116,13 +122,13 @@ class RegisterViewModel extends GetxController {
     _selectedWorkPlace.value = work;
   }
 
-  // void updateSelectedHours(DateTime newTime) {
-  //   selectedTimeHours.value = newTime;
-  // }
+  void updateSelectedHours(DateTime newTime) {
+    selectedTimeHours.value = newTime;
+  }
 
-  // void updateSelectedMinutes(DateTime updatedTime) {
-  //   selectedTimeMinutes.value = updatedTime;
-  // }
+  void updateSelectedMinutes(DateTime updatedTime) {
+    selectedTimeMinutes.value = updatedTime;
+  }
 
   // 시간 선택
   void updateSelectedHour(int hour) {
@@ -177,18 +183,24 @@ class RegisterViewModel extends GetxController {
   };
 
   // POST 요청을 위한 데이터 생성
-  Map<String, dynamic> createPostData() {
+  Map<String, dynamic> createCommonData() {
     // 선택된 근무 주차 변환 (1주, 2주, 3주 -> 1, 2, 3)
     int partTime = int.parse(_selectedWork.value.replaceAll('주', '')) * 7;
     // 출근 시간 포맷팅 (HH:mm:ss)
-    String attendanceTime = "${selectedHours.toString().padLeft(2, '0')}:"
-        "${selectedMinutes.toString().padLeft(2, '0')}:00";
+    // String attendanceTime =
+    //     "${selectedTimeHours.value.hour.toString().padLeft(2, '0')}:"
+    //     "${selectedTimeMinutes.value.minute.toString().padLeft(2, '0')}:00";
+    String attendanceTime =
+        "${_selectedHours.value.toString().padLeft(2, '0')}:"
+        "${_selectedMinutes.value.toString().padLeft(2, '0')}:00";
 
     final now = DateTime.now();
     DateTime workStartTime = DateTime(
       now.year,
       now.month,
       now.day,
+      // selectedTimeHours.value.hour,
+      // selectedTimeMinutes.value.minute,
       selectedHours,
       selectedMinutes,
     );
@@ -204,14 +216,14 @@ class RegisterViewModel extends GetxController {
     }).toList();
 
     // 외근 여부
-    bool isOutside = _selectedWorkPlace.value == '외근 가능';
-    LogUtil.info({
-      "partTime": partTime,
-      "attendanceTime": attendanceTime,
-      "workStartTime": workStartTimeString,
-      "mealTimeList": mealTimeList,
-      "isOutside": isOutside
-    });
+    bool isOutside = _selectedWorkPlace.value == '네, 외근에 도전해보겠습니다!';
+    // LogUtil.info({
+    //   "partTime": partTime,
+    //   "attendanceTime": attendanceTime,
+    //   "workStartTime": workStartTimeString,
+    //   "mealTimeList": mealTimeList,
+    //   "isOutside": isOutside
+    // });
     return {
       "partTime": partTime,
       "attendanceTime": attendanceTime,
@@ -221,32 +233,52 @@ class RegisterViewModel extends GetxController {
     };
   }
 
+  Map<String, dynamic> createPostData() {
+    var data = createCommonData();
+    data.remove('workStartTime'); // POST 요청에서 workStartTime 제거
+
+    LogUtil.info(data);
+
+    return data;
+  }
+
+  Map<String, dynamic> createFcmData() {
+    return createCommonData(); // FCM용 데이터는 workStartTime 포함
+  }
+
   Future<void> submitRegisterData() async {
+    LogUtil.debug('submitRegisterData 시작');
     try {
       final Map<String, dynamic> registerData = createPostData();
+      final Map<String, dynamic> fcmData = createFcmData();
 
       // LOCAL-FCM 알림 설정
       await _notificationService.scheduleNotifications(
-        partTime: registerData['partTime'],
-        attendanceTime: registerData['attendanceTime'],
-        workStartTime: registerData['workStartTime'],
-        mealTimeList:
-            List<Map<String, String>>.from(registerData['mealTimeList']),
-        isOutside: registerData['isOutside'],
+        partTime: fcmData['partTime'],
+        attendanceTime: fcmData['attendanceTime'],
+        workStartTime: fcmData['workStartTime'],
+        mealTimeList: List<Map<String, String>>.from(fcmData['mealTimeList']),
+        isOutside: fcmData['isOutside'],
       );
 
       final response = await _registerRepository.sendRegisterData(registerData);
 
+      // 서버로 보내는 페이로드 로그 찍기
+      LogUtil.info('Sending payload to server: $response');
+
       if (response.isOk) {
         // 성공 처리
         Get.snackbar('성공', '근로계약서가 성공적으로 제출되었습니다.');
+        LogUtil.debug('성공 스낵바 표시');
       } else {
         // 실패 처리
         Get.snackbar('오류', '근로계약서 제출에 실패했습니다.');
+        LogUtil.debug('오류');
       }
     } catch (e) {
       LogUtil.error('Error submitting register data: $e');
       Get.snackbar('오류', '근로계약서 제출 중 오류가 발생했습니다.');
     }
+    LogUtil.debug('submitRegisterData 종료');
   }
 }

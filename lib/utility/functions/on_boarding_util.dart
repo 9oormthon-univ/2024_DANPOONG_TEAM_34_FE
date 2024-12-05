@@ -5,5 +5,5 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> completeOnboarding() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool('hasCompletedOnboarding', true);
-  Get.offAllNamed(Routes.ROOT);
+  // Get.offAllNamed(Routes.ROOT);
 }

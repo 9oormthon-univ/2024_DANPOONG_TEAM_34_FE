@@ -9,10 +9,8 @@ class RegisterProviderImpl extends BaseConnect implements RegisterProvider {
   @override
   Future<Response> sendRegisterData(Map<String, dynamic> registerData) async {
     try {
-      return await post(
-        '/users/register',
-        registerData,
-      );
+      final response = await post('/users/register', registerData);
+      return response;
     } catch (e) {
       LogUtil.error('Error sending register data: $e');
       rethrow;
