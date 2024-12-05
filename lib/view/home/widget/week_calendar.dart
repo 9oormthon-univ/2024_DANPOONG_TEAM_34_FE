@@ -46,7 +46,7 @@ class WeekCalendarView extends StatelessWidget {
         'weekday': _getWeekdayString(date.weekday),
         'date': date,
         'isSelected': _isDateInWorkPeriod(
-            date, weekState.workStartTime, weekState.workEndTime),
+            date, weekState.workStartTime, weekState.currentTime),
       };
     });
   }
@@ -75,14 +75,15 @@ class WeekCalendarView extends StatelessWidget {
   }
 
   bool _isDateInWorkPeriod(
-      DateTime date, DateTime workStart, DateTime workEnd) {
+      DateTime date, DateTime workStart, DateTime workNow) {
     final compareDate = DateTime(date.year, date.month, date.day);
     final compareWorkStart =
         DateTime(workStart.year, workStart.month, workStart.day);
-    final compareWorkEnd = DateTime(workEnd.year, workEnd.month, workEnd.day);
+    // final compareWorkEnd = DateTime(workEnd.year, workEnd.month, workEnd.day);
+    final compareWorkNow = DateTime(workNow.year, workNow.month, workNow.day);
 
     return !compareDate.isBefore(compareWorkStart) &&
-        !compareDate.isAfter(compareWorkEnd);
+        !compareDate.isAfter(compareWorkNow);
   }
 
   // Widget _buildDayItem(String weekday, String date, bool isSelected) {
