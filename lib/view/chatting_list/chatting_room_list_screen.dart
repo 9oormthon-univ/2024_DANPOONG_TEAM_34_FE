@@ -64,7 +64,6 @@ Widget _chatListItem(ChattingRoomState chattingRoom) {
 
   return GestureDetector(
     onTap: () {
-      //TODO-[규진] 채팅방으로 이동 동적으로 바꿔야함
       navigateToChatScreen(chattingRoom.chatRoomId, chattingRoom.eChatType);
     },
     child: Container(
@@ -126,7 +125,6 @@ Widget _chatContent(String name, String preview) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //TODO-[규진] 향후에 실제 데이터로 변경
         Text(
           name,
           style: FontSystem.KR16B,
@@ -146,7 +144,6 @@ Widget _chatTimeAndNotification(String? createdAt, int nonReadCount) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.end,
     children: [
-      //TODO-[규진] 향후에 실제 데이터로 변경
       Text(
         createdAt ?? '00:00',
         style: TextStyle(
@@ -164,8 +161,6 @@ Widget _chatTimeAndNotification(String? createdAt, int nonReadCount) {
                 shape: BoxShape.circle,
               ),
               child: Center(
-                  //TODO-[규진] 향후에 실제 데이터로 변경
-
                   child: Text(
                 nonReadCount.toString(),
                 style: TextStyle(
