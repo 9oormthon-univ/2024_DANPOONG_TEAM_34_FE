@@ -22,8 +22,12 @@ class RootScreen extends BaseScreen<RootViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Obx(
-      () => IndexedStack(
+    return Obx(() {
+      // 주석 해제하면 온보딩 팝업 뜸
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   viewModel.showPopupForCurrentTab(context);
+      // });
+      return IndexedStack(
         index: viewModel.selectedIndex,
         children: const [
           HomeScreen(),
@@ -36,8 +40,8 @@ class RootScreen extends BaseScreen<RootViewModel> {
           // StatisticsScreen(),
 //           SeeMoreScreen(),
         ],
-      ),
-    );
+      );
+    });
   }
 
   @override

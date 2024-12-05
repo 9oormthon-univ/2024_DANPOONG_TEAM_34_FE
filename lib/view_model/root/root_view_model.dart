@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/root/custom_bottom_navigation_item_state.dart';
+import 'package:rebootOffice/view_model/chatting_list/chatting_room_list_view_model.dart';
+import 'package:rebootOffice/view_model/home/home_view_model.dart';
+import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 // import 'package:rebootOffice/repository/user/user_repository.dart';
 
 class RootViewModel extends GetxController {
@@ -51,7 +55,20 @@ class RootViewModel extends GetxController {
     ];
   }
 
-
+  void showPopupForCurrentTab(BuildContext context) {
+    switch (selectedIndex) {
+      case 0:
+        Get.find<HomeViewModel>().showBusinessCardPopup(context);
+        break;
+      case 1:
+        Get.find<ChattingRoomListViewModel>().showBusinessCardPopup(context);
+        break;
+      case 2:
+        Get.find<StatisticsViewModel>().showBusinessCardPopup(context);
+        break;
+      // 필요한 경우 다른 탭에 대한 케이스 추가
+    }
+  }
 
   void fetchIndex(int index) {
     _selectedIndex.value = index;
