@@ -82,6 +82,17 @@ class HomeViewModel extends GetxController {
     selectedDate.value = date;
   }
 
+  // EndTime + 1 확인하는 함수
+  bool isNextDay() {
+    final workEndTime = weekState.workEndTime;
+    final now = DateTime.now();
+    return now.year > workEndTime.year ||
+        (now.year == workEndTime.year && now.month > workEndTime.month) ||
+        (now.year == workEndTime.year &&
+            now.month == workEndTime.month &&
+            now.day > workEndTime.day);
+  }
+
   // 팝업 온보딩 보여주는 함수
   void showBusinessCardPopup(BuildContext context) {
     showDialog(

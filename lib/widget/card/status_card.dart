@@ -4,6 +4,7 @@ import 'package:rebootOffice/utility/functions/level_util.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_widget.dart';
+import 'package:rebootOffice/view_model/home/home_view_model.dart';
 import 'package:rebootOffice/view_model/statistics/statistics_view_model.dart';
 
 class StatusCard extends BaseWidget<StatisticsViewModel> {
@@ -11,6 +12,8 @@ class StatusCard extends BaseWidget<StatisticsViewModel> {
 
   @override
   Widget buildView(BuildContext context) {
+    final homeViewModel = Get.find<HomeViewModel>();
+
     return Obx(
       () => GestureDetector(
         onTap: () {
@@ -28,9 +31,13 @@ class StatusCard extends BaseWidget<StatisticsViewModel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                viewModel.isTouched
-                    ? '목표까지 앞으로 ${viewModel.periodState.remainPeriod}일!'
-                    : '일상회복팀 | ${getEmployeeStatus(viewModel.periodState.contractPeriod, viewModel.periodState.remainPeriod, viewModel.periodState.progressPeriod)}',
+                // EndTime + 1 이면 텍스트 변경
+                homeViewModel.isNextDay()
+                    ? '목표에 도달했어요!'
+                    // 터치하면 텍스트 변경
+                    : viewModel.isTouched
+                        ? '목표까지 앞으로 ${viewModel.periodState.remainPeriod}일!'
+                        : '일상회복팀 | ${getEmployeeStatus(viewModel.periodState.contractPeriod, viewModel.periodState.remainPeriod, viewModel.periodState.progressPeriod)}',
                 style: FontSystem.KR14B.copyWith(color: ColorSystem.white),
               ),
               const Spacer(),

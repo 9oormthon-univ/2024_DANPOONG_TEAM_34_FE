@@ -36,13 +36,9 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    // 온보딩 팝업 (주석처리하면 팝업 안보임)
-    // 사용자가 한 번 팝업 보면 그 이후로 안보이게 하는 기능 구현? 필요?
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.showBusinessCardPopup(context);
-    });
-
     return RefreshIndicator(
+      backgroundColor: Colors.white,
+      color: ColorSystem.blue,
       onRefresh: () async {
         await viewModel.readWeek();
         await viewModel.readDailyWork();
@@ -77,7 +73,9 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     return Column(
       children: [
         Text(
-          '${viewModel.userState.name}님 잘 해내고 있어요!\n조금씩 나아가 보아요',
+          viewModel.isNextDay()
+              ? '${viewModel.userState.name}님 잘 해내셨어요!!\n지금처럼 계속해서 힘내 보아요'
+              : '${viewModel.userState.name}님 잘 해내고 있어요!\n조금씩 나아가 보아요',
           style: FontSystem.KR24B,
         ),
         const SizedBox(height: 16),
@@ -86,6 +84,10 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
   }
 
   Widget _buildSchedule() {
+    if (viewModel.isNextDay()) {
+      return Container(); // 빈 컨테이너 반환
+    }
+
     return Column(
       children: [
         const SizedBox(height: 24),
@@ -132,15 +134,19 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
   }) {
     final now = DateTime.now();
     final startParts = startTime.split(':');
+    final endParts = endTime.split(':');
     final start = DateTime(now.year, now.month, now.day,
         int.parse(startParts[0]), int.parse(startParts[1]));
+    final end = DateTime(now.year, now.month, now.day, int.parse(endParts[0]),
+        int.parse(endParts[1]));
     final isCurrentTime =
         now.isAfter(start) && now.isBefore(start.add(const Duration(hours: 1)));
+    final isPast = now.isAfter(end);
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDone
+        color: isDone || isPast
             ? ColorSystem.grey.shade200
             : isCurrentTime
                 ? const Color(0xFF0066FF).withOpacity(0.1)
@@ -186,7 +192,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           Text(
             activity,
             style: FontSystem.KR18M.copyWith(
-              color: ColorSystem.black,
+              color: isPast ? ColorSystem.black : ColorSystem.grey.shade800,
             ),
           ),
         ],
