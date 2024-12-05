@@ -37,13 +37,37 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
   }
 
   Widget _buildDateHeader() {
+    final selectedDate = viewModel.selectedDate.value;
+    final weekday = _getWeekdayString(selectedDate.weekday);
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-      child: const Text(
-        '2024년 11월 30일 토요일',
+      child: Text(
+        '${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일 $weekday',
         style: FontSystem.KR20M,
       ),
     );
+  }
+
+  String _getWeekdayString(int weekday) {
+    switch (weekday) {
+      case DateTime.monday:
+        return '월요일';
+      case DateTime.tuesday:
+        return '화요일';
+      case DateTime.wednesday:
+        return '수요일';
+      case DateTime.thursday:
+        return '목요일';
+      case DateTime.friday:
+        return '금요일';
+      case DateTime.saturday:
+        return '토요일';
+      case DateTime.sunday:
+        return '일요일';
+      default:
+        return '';
+    }
   }
 
   Widget _buildTaskList() {

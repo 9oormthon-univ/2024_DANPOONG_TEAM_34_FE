@@ -210,7 +210,8 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
         );
       },
       onReportTap: () {
-        Get.toNamed(Routes.STATISTICS_DETAIL);
+        Get.toNamed(Routes.STATISTICS_DETAIL,
+            arguments: viewModel.selectedDate.value);
         // 업무일지 보기 로직
       },
     );

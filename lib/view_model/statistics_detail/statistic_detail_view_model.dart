@@ -13,6 +13,7 @@ class StatisticsDetailViewModel extends GetxController {
   /* ------------------------------------------------------ */
   late final PageController _pageController;
   final _taskList = <TaskState>[].obs;
+  final Rx<DateTime> selectedDate = DateTime.now().obs;
 
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
@@ -28,6 +29,8 @@ class StatisticsDetailViewModel extends GetxController {
     // Initialize private fields
     _statisticsDetailRepository = Get.find<StatisticsRepository>();
     _pageController = PageController(viewportFraction: 0.83);
+    selectedDate.value = Get.arguments ?? DateTime.now();
+
     readUserTaskList();
     // 예시데이터 삽입
     // _taskList.addAll([
@@ -51,7 +54,8 @@ class StatisticsDetailViewModel extends GetxController {
 
   void readUserTaskList() async {
     // _taskList.addAll(await _statisticsDetailRepository.readUserTaskList());
-    _taskList.value = await _statisticsDetailRepository.readUserTaskList();
+    _taskList.value =
+        await _statisticsDetailRepository.readUserTaskList(selectedDate.value);
 
     // _taskList.addAll(await _statisticsDetailRepository.readUserTaskList());
   }

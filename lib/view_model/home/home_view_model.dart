@@ -21,6 +21,8 @@ class HomeViewModel extends GetxController {
   late final _isBusinessCardExpanded = false.obs;
   late final _showBottomInfo = false.obs;
   final RxBool _showWelcomeCard = false.obs;
+  // week_calender 날짜 선택
+  final Rx<DateTime?> selectedDate = Rx<DateTime?>(DateTime.now());
 
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
@@ -74,6 +76,10 @@ class HomeViewModel extends GetxController {
 
   Future<void> checkUnreadMessage() async {
     _showWelcomeCard.value = await SharedPrefsUtil.getHasUnreadMessage();
+  }
+
+  void updateSelectedDate(DateTime date) {
+    selectedDate.value = date;
   }
 
   // 팝업 온보딩 보여주는 함수

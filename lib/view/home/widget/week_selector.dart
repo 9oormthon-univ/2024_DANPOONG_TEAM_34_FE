@@ -26,27 +26,27 @@ class WeekSelector extends StatelessWidget {
           style: FontSystem.KR16B,
         ),
         const SizedBox(width: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            border: Border.all(color: ColorSystem.grey.shade200),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '$weekNumber주차',
-                style: FontSystem.KR14R,
-              ),
-              const SizedBox(width: 4),
-              const Icon(
-                Icons.keyboard_arrow_down,
-                size: 20,
-              ),
-            ],
-          ),
-        ),
+        // Container(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        //   decoration: BoxDecoration(
+        //     border: Border.all(color: ColorSystem.grey.shade200),
+        //     borderRadius: BorderRadius.circular(4),
+        //   ),
+        //   child: Row(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       Text(
+        //         '$weekNumber주차',
+        //         style: FontSystem.KR14R,
+        //       ),
+        //       const SizedBox(width: 4),
+        //       const Icon(
+        //         Icons.keyboard_arrow_down,
+        //         size: 20,
+        //       ),
+        //     ],
+        //   ),
+        // ),
         const Spacer(),
       ],
     );

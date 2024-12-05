@@ -46,11 +46,11 @@ class StatisticsRepositoryImpl extends GetxService
   }
 
   @override
-  Future<List<TaskState>> readUserTaskList() async {
+  Future<List<TaskState>> readUserTaskList(DateTime date) async {
     List<dynamic> data;
 
     try {
-      data = await _statisticsProvider.readUserTaskList();
+      data = await _statisticsProvider.readUserTaskList(date);
     } catch (e) {
       LogUtil.error("Task 설정 실패 ,초기값으로 설정");
       return TaskState.initial();

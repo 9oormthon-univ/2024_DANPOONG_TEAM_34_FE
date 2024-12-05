@@ -6,6 +6,6 @@ import 'package:rebootOffice/model/statistics/user_status_state.dart';
 abstract class StatisticsRepository {
   Future<UserStatusState> readUserStatus();
   Future<PeriodState> readUserPeriod();
-  Future<List<TaskState>> readUserTaskList();
+  Future<List<TaskState>> readUserTaskList(DateTime date);
   Future<AttendanceState> readUserAttendanceList(int index);
 }

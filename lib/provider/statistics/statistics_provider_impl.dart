@@ -37,11 +37,11 @@ class StatisticsProviderImpl extends BaseConnect implements StatisticsProvider {
   }
 
   @override
-  Future<List<dynamic>> readUserTaskList() async {
+  Future<List<dynamic>> readUserTaskList(DateTime date) async {
     Response response;
-    var year = DateTime.now().year;
-    var month = DateTime.now().month;
-    var day = DateTime.now().day;
+    var year = date.year;
+    var month = date.month;
+    var day = date.day;
 
     try {
       response = await get(
