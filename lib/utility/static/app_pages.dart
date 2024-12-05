@@ -3,6 +3,7 @@ import 'package:rebootOffice/binding/root_binding.dart';
 import 'package:rebootOffice/middleware/login_middleware.dart';
 import 'package:rebootOffice/middleware/on_boarding_middleware.dart';
 import 'package:rebootOffice/view/chatting_room/chatting_room_screen.dart';
+import 'package:rebootOffice/view/ending/ending_screen.dart';
 import 'package:rebootOffice/view/login/login_screen.dart';
 import 'package:rebootOffice/view/onboarding/onboarding_screen.dart';
 import 'package:rebootOffice/view/register/register_screen.dart';
@@ -47,7 +48,7 @@ List<GetPage> appPages = [
     name: Routes.LOGIN,
     page: () => const LoginScreen(),
     binding: LoginBinding(),
-    middlewares: [
+    middlewares: const [
       // LoginMiddleware(),
     ],
   ),
@@ -55,6 +56,14 @@ List<GetPage> appPages = [
     name: Routes.STATISTICS_DETAIL,
     page: () => const StatisticsDetailScreen(),
     binding: StatissticDetailBinding(),
+    middlewares: [
+      LoginMiddleware(),
+    ],
+  ),
+  GetPage(
+    name: Routes.ENDING,
+    page: () => const EndingScreen(),
+    binding: EndingBinding(),
     middlewares: [
       LoginMiddleware(),
     ],

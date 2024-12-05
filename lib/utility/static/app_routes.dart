@@ -8,4 +8,5 @@ abstract class Routes {
   static const String CHATTING_ROOM = "/chatting_room/:chattingRoomId";
   static const String STATISTICS_DETAIL = "/statistics_detail";
   static const String REGISTER = "/register";
+  static const String ENDING = "/ending";
 }
