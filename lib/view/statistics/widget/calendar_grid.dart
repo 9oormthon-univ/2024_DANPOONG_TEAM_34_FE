@@ -35,19 +35,19 @@ class CalendarGrid extends BaseWidget<StatisticsViewModel> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildStatusItem(
-              'assets/icons/common/work_circle_check.svg',
+              'assets/icons/common/circle_check_green.svg',
               viewModel.attendanceState[viewModel.selectedIndex].success ?? 0,
               Colors.green,
             ),
             const SizedBox(width: 12),
             _buildStatusItem(
-              'assets/icons/common/work_circle_warning.svg',
+              'assets/icons/common/circle_warning.svg',
               viewModel.attendanceState[viewModel.selectedIndex].unclear ?? 0,
               Colors.orange,
             ),
             const SizedBox(width: 12),
             _buildStatusItem(
-              'assets/icons/common/work_circle_dangerous.svg',
+              'assets/icons/common/circle_dangerous.svg',
               viewModel.attendanceState[viewModel.selectedIndex].fail ?? 0,
               Colors.red,
             ),
@@ -69,7 +69,7 @@ class CalendarGrid extends BaseWidget<StatisticsViewModel> {
         const SizedBox(width: 4),
         Text(
           '$count일',
-          style: FontSystem.KR12M.copyWith(color: color),
+          style: FontSystem.KR12SB,
         ),
       ],
     );
