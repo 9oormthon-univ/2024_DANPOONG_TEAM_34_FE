@@ -32,19 +32,29 @@ class StatisticsScreen extends BaseScreen<StatisticsViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Obx(
-      () => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTitle(),
-              const SizedBox(height: 24),
-              const StatusCard(),
-              const SizedBox(height: 24),
-              const CalendarGrid(),
-            ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        // 새로고침 시 필요한 데이터 다시 불러오기
+        viewModel.onInit();
+      },
+      child: Obx(
+        () => SingleChildScrollView(
+          physics:
+              const AlwaysScrollableScrollPhysics(), // 필수: RefreshIndicator가 작동하기 위해 필요
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitle(),
+                const SizedBox(height: 24),
+                const StatusCard(),
+                const SizedBox(height: 24),
+                const CalendarGrid(),
+                // 스크롤 가능한 영역 확보를 위한 추가 공간
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+              ],
+            ),
           ),
         ),
       ),
