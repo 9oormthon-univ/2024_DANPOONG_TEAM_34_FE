@@ -62,6 +62,14 @@ class ChattingRoomViewModel extends GetxController {
     _chattingRoomListViewModel = Get.find<ChattingRoomListViewModel>();
   }
 
+  void setHasImageFile(bool value) {
+    _hasImage.value = value;
+  }
+
+  void setImageFile(File? value) {
+    _imageFile.value = value;
+  }
+
   void setIsLoading(bool value) {
     _isLoading.value = value;
   }
