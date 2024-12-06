@@ -3,9 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
-import 'package:rebootOffice/utility/functions/log_util.dart';
 import 'package:rebootOffice/utility/functions/on_boarding_util.dart';
-import 'package:rebootOffice/utility/static/app_routes.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
@@ -495,7 +493,6 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
               onPressed: () async {
                 await completeOnboarding();
                 await viewModel.submitRegisterData();
-                Get.offAllNamed(Routes.ROOT);
               },
             ),
           ),
