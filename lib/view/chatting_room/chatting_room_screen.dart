@@ -32,50 +32,120 @@ class ChattingRoomScreen extends BaseScreen<ChattingRoomViewModel> {
     viewModel.fetchChatList(args['chatRoomId']);
     viewModel.selectedChatType = args['eChatType'];
 
-    return Column(
-      children: [
-        _buildDateHeader(),
-        Expanded(
-          child: Obx(() {
-            // 데이터 로드가 완료되면 스크롤
-            if (viewModel.chatList.isNotEmpty) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                viewModel.scrollToBottom();
-              });
-            }
-            return const ChatListView();
-          }),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 32),
-          child: RoundedRectangleTextButton(
-            text: "보고서 작성하기",
-            width: Get.width * 0.9,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: ColorSystem.blue.shade500,
-            textStyle: FontSystem.KR16EB.copyWith(color: Colors.white),
-            onPressed: () {
-              showReportBottomSheet(context);
-            },
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        viewModel.scrollToBottom();
+      },
+      child: Column(
+        children: [
+          Expanded(
+            child: Obx(
+              () {
+                // 채팅 리스트가 업데이트될 때마다 즉시 스크롤
+                if (viewModel.chatList.isNotEmpty) {
+                  // 마이크로태스크 큐에 스크롤 작업 추가
+                  Future.microtask(() => viewModel.scrollToBottom());
+                }
+                return const ChatListView();
+              },
+            ),
           ),
-        ),
-      ],
+          viewModel.selectedChatType == 'FREE'
+              ? _buildChatInputField(context)
+              : _buildReportButton(context),
+        ],
+      ),
     );
   }
 
-  Widget _buildDateHeader() {
+  Widget _buildChatInputField(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: ColorSystem.grey.shade200,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          '2024년 11월 24일 일요일',
-          style: FontSystem.KR14R.copyWith(color: ColorSystem.grey.shade600),
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      margin: const EdgeInsets.only(bottom: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Add image preview
+          Obx(() => viewModel.hasImage && viewModel.imageFile != null
+              ? Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  height: 100,
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Image.file(
+                        viewModel.imageFile!,
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.red),
+                        onPressed: () {
+                          viewModel.setImageFile(null);
+                          viewModel.setHasImageFile(false);
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox()),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: viewModel.contentController,
+                  decoration: const InputDecoration(
+                    hintText: '메시지를 입력해주세요',
+                    border: InputBorder.none,
+                  ),
+                  textInputAction: TextInputAction.send,
+                  onSubmitted: (_) {
+                    viewModel.sendMessage(viewModel.chatRoomId);
+                  },
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.camera_alt),
+                onPressed: () => viewModel.checkAndRequestCameraPermission(),
+              ),
+              IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () async {
+                  await viewModel.sendMessage(viewModel.chatRoomId);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReportButton(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 32),
+      child: RoundedRectangleTextButton(
+        text: "보고서 작성하기",
+        width: Get.width * 0.9,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        backgroundColor: ColorSystem.blue.shade500,
+        textStyle: FontSystem.KR16EB.copyWith(color: Colors.white),
+        onPressed: () {
+          showReportBottomSheet(context);
+        },
       ),
     );
   }

@@ -68,6 +68,17 @@ Widget _chatListItem(ChattingRoomState chattingRoom) {
     },
     child: Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: chattingRoom.eChatType == "FREE"
+            ? ColorSystem.lightBeige
+            : Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: ColorSystem.grey.shade200,
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         children: [
           // 프로필 이미지
@@ -98,6 +109,8 @@ Widget enumToProfileImage(String eChatType) {
         return 'assets/images/default_npc4.png';
       case 'LEAVE':
         return 'assets/images/default_npc5.png';
+      case 'FREE':
+        return 'assets/images/default_npc6.png';
       default:
         return 'assets/images/default_npc.png';
     }
