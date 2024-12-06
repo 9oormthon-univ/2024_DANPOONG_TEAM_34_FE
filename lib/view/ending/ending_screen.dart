@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
 import 'package:rebootOffice/utility/system/font_system.dart';
 import 'package:rebootOffice/view/base/base_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:rebootOffice/view_model/ending/ending_view_model.dart';
 import 'package:rebootOffice/widget/appbar/default_back_appbar.dart';
 import 'package:rebootOffice/widget/button/rounded_rectangle_text_button.dart';
@@ -69,7 +69,7 @@ class EndingScreen extends BaseScreen<EndingViewModel> {
           const SizedBox(
             height: 32,
           ),
-          _buildTitle('희균님 수고하셨습니다!'),
+          _buildTitle('${viewModel.homeViewModel.userState.name}님 수고하셨습니다!'),
           const SizedBox(height: 4),
           _buildLabel(
               '리부트 오피스와 함께한 여정이 여러분의 \n삶에 용기와 변화를 선물했길 바랍니다.\n앞으로도 응원하겠습니다. 감사합니다!'),
@@ -138,14 +138,18 @@ class EndingScreen extends BaseScreen<EndingViewModel> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Stack(
+        alignment: Alignment.center, // Add this
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                'assets/images/profile_npc.svg',
-                width: 200,
+              Center(
+                // Wrap with Center
+                child: SvgPicture.asset(
+                  'assets/images/profile_npc.svg',
+                  width: 200,
+                ),
               ),
               const SizedBox(
                 height: 32,
@@ -174,7 +178,8 @@ class EndingScreen extends BaseScreen<EndingViewModel> {
                   context: context,
                   barrierColor: Colors.black.withOpacity(0.5),
                   builder: (context) => CustomTwoButtonModal(
-                    title: "희균님 이제 마지막 단계입니다",
+                    title:
+                        "${viewModel.homeViewModel.userState.name}님 이제 마지막 단계입니다",
                     label: '지금까지 달성한 미션을 확인하고,\n더 많은 도움은 지원센터에서 받아보세요!',
                     leftButtonText: "취소",
                     rightButtonText: "확인",
