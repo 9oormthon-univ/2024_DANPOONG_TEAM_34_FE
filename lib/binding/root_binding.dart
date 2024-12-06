@@ -15,7 +15,7 @@ import '../view_model/root/root_view_model.dart';
 class RootBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<RootViewModel>(() => RootViewModel());
+    Get.lazyPut<RootViewModel>(() => RootViewModel(), fenix: true);
 
     HomeBinding().dependencies();
     ChattingListBinding().dependencies();
