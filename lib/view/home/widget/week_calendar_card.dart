@@ -30,7 +30,7 @@ class _WeekCalendarCardState extends State<WeekCalendarCard> {
     final controller = Get.find<HomeViewModel>();
 
     final now = widget.weekState.currentTime;
-    final weekNumber = ((now.day - 1) ~/ 7);
+    final weekNumber = ((now.day - 1) ~/ 7) + 1;
 
     return Obx(
       () => Container(

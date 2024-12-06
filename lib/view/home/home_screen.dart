@@ -139,8 +139,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
         int.parse(startParts[0]), int.parse(startParts[1]));
     final end = DateTime(now.year, now.month, now.day, int.parse(endParts[0]),
         int.parse(endParts[1]));
-    final isCurrentTime =
-        now.isAfter(start) && now.isBefore(start.add(const Duration(hours: 1)));
+    final isCurrentTime = now.isAfter(start) && now.isBefore(end);
     final isPast = now.isAfter(end);
 
     return Container(
@@ -192,7 +191,11 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           Text(
             activity,
             style: FontSystem.KR18M.copyWith(
-              color: isPast ? ColorSystem.black : ColorSystem.grey.shade800,
+              color: isPast
+                  ? ColorSystem.black
+                  : isCurrentTime
+                      ? ColorSystem.black
+                      : ColorSystem.grey.shade800,
             ),
           ),
         ],
