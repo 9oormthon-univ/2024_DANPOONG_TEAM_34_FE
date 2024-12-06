@@ -70,21 +70,29 @@ class ChattingProvierImpl extends BaseConnect implements ChattingProvider {
   @override
   Future<Response<dynamic>> sendChatMessage(
       int chatId, String question, String eChatType, File? imageFile) async {
-    final formData = FormData(
-      {
-        'image': MultipartFile(
-          imageFile,
-          filename: '${DateTime.now().millisecondsSinceEpoch}.jpg',
-          contentType: 'image/jpg',
-        ),
-      },
-    );
+    // 이미지가 있을 경우에는 Multi-part로 전송하고, 없을 경우에는 JSON으로 전송
+    late final FormData? formData;
+    imageFile == null
+        ? formData = null
+        : formData = FormData(
+            {
+              'image': MultipartFile(
+                imageFile,
+                filename: '${DateTime.now().millisecondsSinceEpoch}.jpg',
+                contentType: 'image/jpg',
+              ),
+            },
+          );
 
     try {
+      LogUtil.debug(
+          'Sending chat message: \n $chatId \n$question \n$eChatType \n$formData');
       return await post(
         '/chats?eChatType=$eChatType&question=$question',
         formData,
-        contentType: 'multipart/form-data', // Content-Type 명시적 설정
+        contentType: imageFile == null
+            ? 'application/json'
+            : 'multipart/form-data', // Content-Type 명시적 설정
       );
     } catch (e) {
       LogUtil.error('Error sending chat message: $e');
