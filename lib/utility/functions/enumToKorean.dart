@@ -16,6 +16,8 @@ String enumToKorean(String value) {
       return '외근';
     case 'WALK':
       return '외근';
+    case 'FREE':
+      return '상담';
     default:
       return value;
   }

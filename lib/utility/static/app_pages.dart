@@ -48,7 +48,7 @@ List<GetPage> appPages = [
     name: Routes.LOGIN,
     page: () => const LoginScreen(),
     binding: LoginBinding(),
-    middlewares: const [
+    middlewares: [
       // LoginMiddleware(),
     ],
   ),
