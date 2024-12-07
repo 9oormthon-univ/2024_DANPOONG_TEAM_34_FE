@@ -37,14 +37,14 @@ class StatisticsProviderImpl extends BaseConnect implements StatisticsProvider {
   Future<List<dynamic>> readUserTaskList(DateTime date) async {
     Response response;
     var year = date.year;
-    var month = date.month;
-    var day = date.day;
+    var month = date.month.toString().padLeft(2, '0'); // 월을 2자리로 포맷팅
+    var day = date.day.toString().padLeft(2, '0'); // 일을 2자리로 포맷팅
 
     try {
       response = await get(
         '/analysis/calendar-detail',
         query: {
-          'date': '$year-$month-$day',
+          'date': '$year-$month-$day', // YYYY-MM-DD 형식으로 전송
         },
       );
     } catch (e) {
