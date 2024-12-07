@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:rebootOffice/app/firebase/local_fcm_service.dart';
 import 'package:rebootOffice/repository/register/register_repository.dart';
 import 'package:rebootOffice/utility/functions/log_util.dart';
-import 'package:rebootOffice/utility/static/app_routes.dart';
 
 class RegisterViewModel extends GetxController {
   /* ------------------------------------------------------ */
@@ -41,7 +39,7 @@ class RegisterViewModel extends GetxController {
   final List<String> options = [
     "아침 (09:00 ~ 10:00)",
     "점심 (12:00 ~ 13:00)",
-    "저녁 (18:00 ~ 19:00)",
+    "저녁 (20:30 ~ 21:30)",
   ];
 
   // 시간 컨트롤러
@@ -104,6 +102,7 @@ class RegisterViewModel extends GetxController {
 
   // FCM 초기화 메서드
   Future<void> _initNotifications() async {
+    LogUtil.info("로컬 FCM 설정 시작");
     await _notificationService.initNotification();
   }
 
@@ -179,51 +178,32 @@ class RegisterViewModel extends GetxController {
   final Map<String, String> mealTimeMap = {
     "아침 (09:00 ~ 10:00)": "MORNING",
     "점심 (12:00 ~ 13:00)": "LUNCH",
-    "저녁 (18:00 ~ 19:00)": "DINNER"
+    "저녁 (20:30 ~ 21:30)": "DINNER"
   };
 
   // POST 요청을 위한 데이터 생성
   Map<String, dynamic> createCommonData() {
-    // 선택된 근무 주차 변환 (1주, 2주, 3주 -> 1, 2, 3)
+    // 근무 주차 변환
     int partTime = int.parse(_selectedWork.value.replaceAll('주', '')) * 7;
-    // 출근 시간 포맷팅 (HH:mm:ss)
-    // String attendanceTime =
-    //     "${selectedTimeHours.value.hour.toString().padLeft(2, '0')}:"
-    //     "${selectedTimeMinutes.value.minute.toString().padLeft(2, '0')}:00";
+
+    // 출근 시간 포맷팅
     String attendanceTime =
-        "${_selectedHours.value.toString().padLeft(2, '0')}:"
-        "${_selectedMinutes.value.toString().padLeft(2, '0')}:00";
+        "${_selectedHours.value.toString().padLeft(2, '0')}:${_selectedMinutes.value.toString().padLeft(2, '0')}:00";
 
-    final now = DateTime.now();
-    DateTime workStartTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      // selectedTimeHours.value.hour,
-      // selectedTimeMinutes.value.minute,
-      selectedHours,
-      selectedMinutes,
-    );
-    String workStartTimeString = workStartTime.year.toString() +
-        '-' +
-        workStartTime.month.toString().padLeft(2, '0') +
-        "-" +
-        workStartTime.day.toString().padLeft(2, '0');
+    // 근무 시작일 설정
+    final tomorrow = DateTime.now().add(const Duration(days: 1));
+    String workStartTimeString =
+        "${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}";
 
-    // 선택된 식사 시간 변환
+    // 식사 시간 변환
     List<Map<String, String>> mealTimeList = selectedItems.map((item) {
       return {"mealTime": mealTimeMap[item] ?? ""};
     }).toList();
 
+    LogUtil.debug("mealTimeList: $mealTimeList");
     // 외근 여부
     bool isOutside = _selectedWorkPlace.value == '네, 외근에 도전해보겠습니다!';
-    // LogUtil.info({
-    //   "partTime": partTime,
-    //   "attendanceTime": attendanceTime,
-    //   "workStartTime": workStartTimeString,
-    //   "mealTimeList": mealTimeList,
-    //   "isOutside": isOutside
-    // });
+
     return {
       "partTime": partTime,
       "attendanceTime": attendanceTime,
@@ -253,14 +233,14 @@ class RegisterViewModel extends GetxController {
       final Map<String, dynamic> fcmData = createFcmData();
 
       // LOCAL-FCM 알림 설정
-      await _notificationService.scheduleNotifications(
-        partTime: fcmData['partTime'],
-        attendanceTime: fcmData['attendanceTime'],
-        workStartTime: fcmData['workStartTime'],
-        mealTimeList: List<Map<String, String>>.from(fcmData['mealTimeList']),
-        isOutside: fcmData['isOutside'],
-      );
-
+      // await _notificationService.scheduleNotifications(
+      //   partTime: fcmData['partTime'],
+      //   attendanceTime: fcmData['attendanceTime'],
+      //   workStartTime: fcmData['workStartTime'],
+      //   mealTimeList: List<Map<String, String>>.from(fcmData['mealTimeList']),
+      //   isOutside: fcmData['isOutside'],
+      // );
+      await _notificationService.testNotifications();
       final response = await _registerRepository.sendRegisterData(registerData);
 
       // 서버로 보내는 페이로드 로그 찍기

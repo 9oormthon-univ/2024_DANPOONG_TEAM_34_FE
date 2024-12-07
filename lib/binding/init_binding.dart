@@ -32,7 +32,6 @@ class InitBinding extends Bindings {
     Get.lazyPut<ChattingProvider>(() => ChattingProvierImpl());
     Get.lazyPut<StatisticsProvider>(() => StatisticsProviderImpl());
     Get.lazyPut<HomeProvider>(() => HomeProviderImpl());
-    Get.lazyPut<StatisticsProvider>(() => StatisticsProviderImpl());
     Get.lazyPut<OnBoardingProvider>(() => OnBoardingProviderImpl());
     Get.lazyPut<RegisterProvider>(() => RegisterProviderImpl());
     // Repositories
@@ -42,7 +41,6 @@ class InitBinding extends Bindings {
     Get.lazyPut<ChattingRepository>(() => ChattingRepositoryImpl());
     Get.lazyPut<StatisticsRepository>(() => StatisticsRepositoryImpl());
     Get.lazyPut<HomeRepository>(() => HomeRepositoryImpl());
-    Get.lazyPut<StatisticsRepository>(() => StatisticsRepositoryImpl());
     Get.lazyPut<OnBoardingRepository>(() => OnBoardingRepositoryImpl());
     Get.lazyPut<RegisterRepository>(() => RegisterRepositoryImpl());
 

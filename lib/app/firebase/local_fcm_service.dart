@@ -60,6 +60,9 @@ class LocalFcmNotificationService {
 
         // 식사 알림
         for (var meal in mealTimeList) {
+          final mealIndex = mealTimeList.indexOf(meal);
+          final uniqueId = (i * 100) + (mealIndex + 1) * 10;
+
           int hour;
           String title;
 
@@ -73,19 +76,46 @@ class LocalFcmNotificationService {
               title = '점심 식사';
               break;
             case 'DINNER':
-              hour = 16;
+              hour = 20;
               title = '저녁 식사';
               break;
             default:
               continue;
           }
 
+          final now = DateTime.now();
+          DateTime scheduledDateTime;
+
+          // i가 0일 때(첫째 날)는 현재 날짜 기준으로 처리
+          if (i == 0) {
+            scheduledDateTime = DateTime(
+              now.year,
+              now.month,
+              now.day,
+              hour,
+            );
+
+            // 현재 시간이 예약하려는 시간보다 이후라면 다음 날로 설정
+            if (now.hour > hour) {
+              scheduledDateTime =
+                  scheduledDateTime.add(const Duration(days: 1));
+            }
+          } else {
+            // 둘째 날부터는 startDate 기준으로 처리
+            scheduledDateTime =
+                startDate.add(Duration(days: i)).copyWith(hour: hour);
+          }
+
+          LogUtil.info("알림 예약 시도: $title, 시간: $scheduledDateTime"); // 디버깅용 로그
+
           await _scheduleNotification(
-            id: i * 5 + mealTimeList.indexOf(meal) + 1,
+            id: uniqueId,
             title: title,
             body: '$title 시간입니다.',
-            scheduledDate: currentDate.copyWith(hour: hour),
+            scheduledDate: scheduledDateTime,
           );
+
+          LogUtil.info("알림 예약 완료: $title, 시간: $scheduledDateTime");
         }
 
         // 외근자 오후 3시 알림
@@ -108,11 +138,14 @@ class LocalFcmNotificationService {
     required String body,
     required DateTime scheduledDate,
   }) async {
+    final scheduledTZ = tz.TZDateTime.from(
+        scheduledDate, tz.getLocation('Asia/Seoul')); // 한국 시간대로 명시
+
     await notificationsPlugin.zonedSchedule(
       id,
       title,
       body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
+      scheduledTZ,
       NotificationDetails(
         iOS: DarwinNotificationDetails(
           presentAlert: true,
@@ -131,6 +164,7 @@ class LocalFcmNotificationService {
 
   Future<void> testNotifications() async {
     final DateTime now = DateTime.now();
+    final DateTime scheduledTime = now.add(const Duration(minutes: 1)); // 1분 후
 
     // 알림 권한 요청
     final bool? result = await notificationsPlugin
@@ -143,17 +177,12 @@ class LocalFcmNotificationService {
         );
 
     if (result ?? false) {
-      // 5분동안 매분 알림 스케줄링
-      for (int i = 0; i < 5; i++) {
-        final scheduledTime = now.add(Duration(minutes: i));
-
-        await _scheduleNotification(
-          id: i,
-          title: '테스트 알림 ${i + 1}',
-          body: '${scheduledTime.hour}시 ${scheduledTime.minute}분 테스트 알림입니다.',
-          scheduledDate: scheduledTime,
-        );
-      }
+      await _scheduleNotification(
+        id: 1,
+        title: '출근 시간입니다.',
+        body: '${scheduledTime.hour}시 ${scheduledTime.minute}분 출근 알림입니다.',
+        scheduledDate: scheduledTime,
+      );
     }
   }
 }
