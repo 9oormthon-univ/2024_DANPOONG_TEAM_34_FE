@@ -98,21 +98,32 @@ class ChattingRoomViewModel extends GetxController {
       // 사용자 메시지 생성
       final userMessage = ChatState(
         chatContent: _contentController.text,
-        imageUrl: _imageFile.value?.path, // 로컬 이미지 경로
+        imageUrl: _imageFile.value?.path,
         createAt: DateTime.now(),
         speaker: "USER",
       );
 
-      // 먼저 사용자 메시지를 리스트에 추가
+      // 사용자 메시지를 리스트에 추가
       _chatList.add(userMessage);
       scrollToBottom();
+
+      // 입력 필드 및 이미지 초기화를 먼저 수행
+      final tempContent = _contentController.text;
+      final tempImage = _imageFile.value;
+      _contentController.clear();
+      _imageFile.value = null;
+      _hasImage.value = false;
+
+      // 잠시 대기 후 로딩 상태 설정
+      await Future.delayed(const Duration(milliseconds: 300));
       setIsLoading(true);
+
       // API 호출
       final response = await _chattingRepository.sendChatMessage(
         chatId,
-        _contentController.text,
+        tempContent,
         _selectedChatType.value,
-        _imageFile.value,
+        tempImage,
       );
 
       if (response.body['data']['isCompleted'] == true) {
@@ -120,32 +131,25 @@ class ChattingRoomViewModel extends GetxController {
         LogUtil.info('메시지 전송 성공');
       }
 
-      // AI 응답 메시지 생성
+      // AI 응답 메시지 생성 및 추가
       final aiMessage = ChatState(
           chatContent: response.body['data']['chatContent'],
           imageUrl: null,
           createAt: DateTime.now(),
           speaker: "AI");
-      // AI 응답을 리스트에 추가
       _chatList.add(aiMessage);
 
       setIsLoading(false);
+      _chatRoomId.value = 0;
+
       Future.delayed(const Duration(milliseconds: 300), () {
         scrollToBottom();
       });
-      // 입력 필드 및 이미지 초기화
-      _contentController.clear();
-      _imageFile.value = null;
-      _hasImage.value = false;
-      _chatRoomId.value = 0;
 
-      //다 했으면 채팅 불러오기 보고 안 하면 안 줄어듬 애초에
+      //채팅방 목록 업데이트
       _chattingRoomListViewModel.fetchChattingRoomList();
     } catch (e) {
-      // 에러 발생 시 마지막 메시지 제거 (사용자 메시지 롤백)
-      // if (_chatList.isNotEmpty) {
-      //   _chatList.removeLast();
-      // }
+      setIsLoading(false);
       LogUtil.error(e);
     }
   }
