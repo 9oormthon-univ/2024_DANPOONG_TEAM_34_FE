@@ -491,8 +491,8 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
                   ? const EdgeInsets.symmetric(vertical: 16)
                   : const EdgeInsets.symmetric(vertical: 2),
               onPressed: () async {
-                await completeOnboarding();
                 await viewModel.submitRegisterData();
+                await completeOnboarding();
               },
             ),
           ),
