@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rebootOffice/model/home/week_state.dart';
+import 'package:rebootOffice/utility/functions/log_util.dart';
 import 'package:rebootOffice/view/home/widget/day_item.dart';
 
 class WeekCalendarView extends StatelessWidget {
@@ -22,15 +23,29 @@ class WeekCalendarView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: days.map((day) {
         final date = day['date'] as DateTime;
+        final displayDate = date.day.toString().padLeft(2, '0');
+
         return DayItem(
           weekday: day['weekday'] as String,
-          date: date.day.toString(),
+          date: displayDate,
           isSelected: day['isSelected'] as bool,
           isActive: selectedDate != null &&
               date.year == selectedDate!.year &&
               date.month == selectedDate!.month &&
               date.day == selectedDate!.day,
-          onTap: () => onDateSelected(date),
+          onTap: () {
+            // 년, 월, 일을 모두 두 자리 수로 포맷팅
+            final formattedDate = DateTime(
+              date.year,
+              date.month,
+              date.day,
+            ).toIso8601String().split('T')[0];
+            // 포맷된 날짜로 DateTime 객체 생성
+            final parsedDate = DateTime.parse(formattedDate);
+            LogUtil.debug(parsedDate);
+
+            onDateSelected(parsedDate);
+          },
         );
       }).toList(),
     );
