@@ -35,7 +35,9 @@ class StatisticsScreen extends BaseScreen<StatisticsViewModel> {
     return RefreshIndicator(
       onRefresh: () async {
         // 새로고침 시 필요한 데이터 다시 불러오기
-        viewModel.onInit();
+        viewModel.readAttendanceList();
+        viewModel.readRemainPeriod();
+        viewModel.readUserName();
       },
       child: Obx(
         () => SingleChildScrollView(
